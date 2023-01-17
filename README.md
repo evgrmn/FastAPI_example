@@ -13,9 +13,7 @@ Description:
 ## Installation
 - download files 
 
-Create venv
-
-*In main folder:*
+*Create venv:*
 - python3 -m venv venv
 > sudo apt install python3-venv *if 'venv' is not installed*
 - source venv/bin/activate
