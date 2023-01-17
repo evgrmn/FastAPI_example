@@ -27,6 +27,8 @@ Description:
 *Start server:*
 - uvicorn main:app --reload
 
+> If the database.db file does not exist, it will be created the first time the program is run.
+
 *Start testing:*
 http://localhost:8000/docs
 
