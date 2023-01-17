@@ -1,10 +1,19 @@
-# FastAPI_JWT
-A simple example of FastAPI user authentication using JWT. The functionality allows you to: create users; generate tokens; get user data; create user posts; view, update, delete user posts; put likes and dislikes on posts that do not concern the user.
+# FastAPI_example
+Description:
+
+- API task: Restaurant menu
+- Three tables: menu, submenu, dish
+- The menu consists of submenus, there are dishes in the submenu
+- Dish has only one submenu, submenu has only one menu
+- Deleting a menu deletes its submenus and dishes.
+- Deleting a submenu also deletes its dishes
+- Count the number of submenus and dishes in the menu table
+- Count the number of dishes in the submenu table
 
 ## Installation
 - download files 
 
-I recommend to create venv
+Create venv
 
 *In main folder:*
 - python3 -m venv venv
@@ -13,6 +22,9 @@ I recommend to create venv
 
 *Install requirements:*
 - pip install -r requirements.txt
+> or
+> sudo apt install pip install "fastapi[all]"
+> pip install sqlalchemy
 
 *Start server:*
 - uvicorn main:app --reload
@@ -20,18 +32,11 @@ I recommend to create venv
 *Start testing:*
 http://localhost:8000/docs
 
-![alt text](https://github.com/evgrmn/FastAPI_JWT/blob/main/pic.png?raw=true)
-
 Works great, e.g., with Debian 11 and Python 3.9, Ubuntu 22.04 and Python 3.10
 
-You can check the "database.db" file by typing in your terminal:
+Check the "database.db" file by typing in your terminal:
 
 - sqlite3 database.db
 > sudo apt install sqlite3 *if 'SQLite' is not installed*
-
-Then try for example:
-
-- select * from users;
-
 
 
