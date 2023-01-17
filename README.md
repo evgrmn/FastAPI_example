@@ -22,7 +22,7 @@ Create venv
 
 *Install requirements:*
 - pip install -r requirements.txt
-> or sudo apt install pip install "fastapi[all]" sqlalchemy
+> or pip install "fastapi[all]" sqlalchemy
 
 *Start server:*
 - uvicorn main:app --reload
