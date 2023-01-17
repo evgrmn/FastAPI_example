@@ -20,7 +20,7 @@ Description:
 
 *Install requirements:*
 - pip install -r requirements.txt
-> or pip install "fastapi[all]" sqlalchemy
+> *or* pip install "fastapi[all]" sqlalchemy
 
 ## Start
 
