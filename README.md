@@ -32,7 +32,7 @@ http://localhost:8000/docs
 
 Works great, e.g., with Debian 11 and Python 3.9, Ubuntu 22.04 and Python 3.10
 
-Check the "database.db" file by typing in your terminal:
+Check the "database.db" file by typing:
 
 - sqlite3 database.db
 > sudo apt install sqlite3 *if 'SQLite' is not installed*
