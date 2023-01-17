@@ -22,6 +22,8 @@ Description:
 - pip install -r requirements.txt
 > or pip install "fastapi[all]" sqlalchemy
 
+## Start
+
 *Start server:*
 - uvicorn main:app --reload
 
