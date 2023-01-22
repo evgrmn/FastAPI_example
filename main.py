@@ -102,7 +102,7 @@ async def get_submenu(
 ):
 
     return await _services.get_instance(
-        model=_models.SubMenu, schema=_schemas.SubMenu, id=menu_id, db=db
+        model=_models.SubMenu, schema=_schemas.SubMenu, id=submenu_id, db=db
     )
 
 
