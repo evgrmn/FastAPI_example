@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  test_postgres:
+    container_name: test_postgr
+    image: postgres:15.1-alpine
+    environment:
+        POSTGRES_DB: "test"
+        POSTGRES_PASSWORD: "password"
+    ports:
+      - "5434:5432"
+    networks:
+      - test_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d test -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  test_ylab:
+    container_name: test_ylab
+    build:
+      context: .
+    env_file:
+      - tests/test.env
+    command: "pytest tests/test_app.py -s -W ignore::DeprecationWarning"
+    ports:
+      - "8001:8000"
+    networks:
+      - test_network
+    depends_on:
+      test_postgres:
+        condition: service_healthy
+  test_redis:
+    container_name: test_redis
+    image: redis:latest
+    ports:
+      - "6380:6379"
+    networks:
+      - test_network
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      test_postgres:
+        condition: service_healthy
+
+networks:
+  test_network:
+    name: test_network

@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+tests/__pycache__/
+old/
+readme.txt
+celery_config.py
+_main.py
+_docker-compose.yml
+_.pre-commit-config.yaml
+.mypy_cache/
+.pytest_cache/

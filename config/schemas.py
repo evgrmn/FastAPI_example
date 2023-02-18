@@ -1,7 +1,9 @@
-import pydantic as _pydantic
+from __future__ import annotations
+
+from pydantic import BaseModel
 
 
-class Id(_pydantic.BaseModel):
+class Id(BaseModel):
     id: str
     title: str
     description: str
@@ -10,7 +12,7 @@ class Id(_pydantic.BaseModel):
         orm_mode = True
 
 
-class Common(_pydantic.BaseModel):
+class Common(BaseModel):
     title: str
     description: str
 
@@ -35,9 +37,20 @@ class HandleDish(Common):
     price: str
 
 
-class Delete(_pydantic.BaseModel):
+class Delete(BaseModel):
     status: bool
     message: str
 
     class Config:
         orm_mode = True
+
+
+class Task(BaseModel):
+    message: str
+    task_id: str
+
+
+class Result(BaseModel):
+    task_id: str
+    status: str
+    result: str

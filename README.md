@@ -1,42 +1,61 @@
-# FastAPI_example
-Description:
+# FastAPI_example_Celery
 
-- API task: Restaurant menu
-- Three tables: menu, submenu, dish
-- The menu consists of submenus, there are dishes in the submenu
-- Dish has only one submenu, submenu has only one menu
-- Deleting a menu deletes its submenus and dishes.
-- Deleting a submenu also deletes its dishes
-- Count the number of submenus and dishes in the menu table
-- Count the number of dishes in the submenu table
+## Ресторанное меню
 
-## Installation
-- download files 
+Описание:
 
-*Create venv:*
-- python3 -m venv venv
-> sudo apt install python3-venv *if 'venv' is not installed*
-- source venv/bin/activate
+- Три таблицы: меню, подменю, блюдо
+- У меню есть подменю, у подменю есть блюда
+- У каждого блюда может быть только одно подменю, у каждого подменю может быть только одно меню
+- Меню удаляется вместе со всеми подменю и блюдами
+- Подменю удаляется вместе со всеми блюдами
+- В таблице "меню" считается количество подменю и блюд
+- В таблице "подменю" считается количество блюд
 
-*Install requirements:*
-- pip install -r requirements.txt
-> *or* pip install "fastapi[all]" sqlalchemy
+Особенности:
 
-## Start
+- Используется контейнеризация Docker
+- Кеширование Redis
+- ORM SQLAlchemy
+- Валидация данных Pydantic
+- Тестирование Pytest
 
-*Start server:*
-- uvicorn main:app --reload
+## Установка
 
-> If the database.db file does not exist, it will be created the first time the program is run.
+- Скачать файлы
+- Желательно создать виртуальное окружение venv
+- Скачать образы из Docker Hub:
 
-*Start testing:*
-http://localhost:8000/docs
+    docker pull python:3.10-slim
 
-Works great, e.g., with Debian 11 and Python 3.9, Ubuntu 22.04 and Python 3.10
+    docker pull postgres:15.1-alpine
 
-Check the "database.db" file by typing:
+    docker pull redis:latest
 
-- sqlite3 database.db
-> sudo apt install sqlite3 *if 'SQLite' is not installed*
+    docker pull rabbitmq:3.10.7-management
 
+## Запуск приложения
 
+Создание контейнеров и запуск приложения:
+
+- docker-compose up
+
+После запуска API доступно по адресу http://localhost:8000/docs
+
+## Запуск Pytest
+
+Создание контейнеров для тестирования и запуск Pytest:
+
+- docker-compose -f docker-compose.tests.yml up --build
+
+Перезапуск тестового сценария:
+
+- docker start -ai test_ylab
+
+## Celery
+
+Для работы с Excel-файлом ресторанного меню реализованы три эндпоинта:
+
+1. /api/v1/task - заполняет базу данных тестовыми данными и отправляет задачу в очередь
+2. /api/v1/result - проверяет готовность задачи. Excel-файл записывается в контейнер 'ylab', папка 'app'
+3. /api/v1/task/download-file - скачивает готовый файл

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 description = """
 ### Also used:
 
-SQLAlchemy, Pydantic, SQLite
+SQLAlchemy, Pydantic, PostreSQL, Docker-compose, Redis, Celery, RabbitMQ
 """
