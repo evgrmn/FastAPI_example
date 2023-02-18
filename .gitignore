@@ -9,3 +9,4 @@ _docker-compose.yml
 _.pre-commit-config.yaml
 .mypy_cache/
 .pytest_cache/
+.gitignore
