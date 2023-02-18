@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from models.dish import Data, Delete, Dish
 import control.dish as _control
+from models.dish import Data, Delete, Dish
 
 router = APIRouter()
 
@@ -74,6 +74,7 @@ async def delete_dish(
         submenu_id=submenu_id,
         id=dish_id,
     )
+
 
 @router.get(
     "/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",

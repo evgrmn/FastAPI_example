@@ -28,7 +28,3 @@ class Delete(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-
-

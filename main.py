@@ -10,9 +10,9 @@ app = _fastapi.FastAPI(
     description=description.description,
 )
 
-#app.include_router(_celery.router, prefix="/api/v1", tags=["Celery task"])
+app.include_router(_celery.router, prefix="/api/v1", tags=["Celery task"])
 app.include_router(menu.router, prefix="/api/v1/menus", tags=["Menus"])
 app.include_router(submenu.router, prefix="/api/v1/menus", tags=["Submenus"])
 app.include_router(dish.router, prefix="/api/v1/menus", tags=["Dishes"])
 
-#_services._add_tables()
+# _services._add_tables()

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from models.submenu import Data, Delete, SubMenu
 import control.submenu as _control
+from models.submenu import Data, Delete, SubMenu
 
 router = APIRouter()
 

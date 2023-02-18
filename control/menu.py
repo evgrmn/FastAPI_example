@@ -1,8 +1,9 @@
 import fastapi as _fastapi
+
+import cache_func
 import database.connect as table
 from database.connect import db
 from models.menu import Data, Delete, Menu
-import cache_func
 
 
 async def get_menus():

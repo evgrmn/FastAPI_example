@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi.responses import FileResponse
 
 import config.schemas as _schemas
-import models as _models
+import _models
 from config.cel_config import celery_app
 
 router = APIRouter()

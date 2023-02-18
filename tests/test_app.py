@@ -4,7 +4,7 @@ import httpx
 import pytest
 import pytest_asyncio
 
-import models as _models
+import _models
 from config.config import Variables as var
 from main import app
 

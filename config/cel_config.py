@@ -4,7 +4,6 @@ from celery import Celery
 
 import models as _models
 
-
 celery_app = Celery(
     "worker",
     broker_url="amqp://guest:guest@rabbit:5672//",
@@ -12,7 +11,6 @@ celery_app = Celery(
 )
 celery_app.conf.task_routes = {"celery_worker.task_celery": "test-queue"}
 celery_app.conf.update(task_track_started=True)
-
 
 
 @celery_app.task(name="celery_worker.task_celery")

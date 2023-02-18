@@ -10,14 +10,6 @@ repos:
     -   id: check-case-conflict  # проверяет файлы, которые могут конфликтовать в файловых системах без учета регистра.
     -   id: check-merge-conflict  # проверяет файлы, содержащие конфликтные строки слияния.
 
-# Отсортировывает импорты в проекте
--   repo: https://github.com/pycqa/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
-        exclude: __init__.py
-        args: [ --profile, black, --filter-files ]
-
 # Обновляет синтаксис Python кода в соответствии с последними версиями
 -   repo: https://github.com/asottile/pyupgrade
     rev: v2.31.1
@@ -50,4 +42,4 @@ repos:
     rev: stable
     hooks:
     - id: black
-      language_version: python3.10
+      language_version: python3.9
