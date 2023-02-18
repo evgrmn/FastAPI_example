@@ -3,7 +3,6 @@ from __future__ import annotations
 import fastapi as _fastapi
 
 import description
-import services as _services
 from endpoints import _celery, dish, menu, submenu
 
 app = _fastapi.FastAPI(
