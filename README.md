@@ -1,4 +1,4 @@
-# FastAPI_example_Celery
+# FastAPI_example
 
 ## Ресторанное меню
 
