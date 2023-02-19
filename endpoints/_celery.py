@@ -5,8 +5,8 @@ from celery.result import AsyncResult
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
 
-import config.schemas as _schemas
 import _models
+import config.schemas as _schemas
 from config.cel_config import celery_app
 
 router = APIRouter()
