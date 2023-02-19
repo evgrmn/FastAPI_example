@@ -4,6 +4,9 @@ import cache_func
 import database.connect as table
 from database.connect import db
 from models.dish import Data, Delete, Dish
+from models.menu import Menu
+from models.submenu import SubMenu
+import json
 
 
 async def get_dishes(submenu_id: int):
@@ -30,16 +33,16 @@ async def create_dish(data: Data, menu_id: int, submenu_id: int):
     dish.submenu_id = submenu_id
     db.add(dish)
     db.commit()
-    key_cach_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
+    key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
     await cache_func.cache_create(
-        key_cach_name,
+        key_name,
         Dish.from_orm(dish).dict(),
     )
-    await cache_func.cache_update(
-        f"Menu_{menu_id}", {"dishes_count": menu.dishes_count}
+    await cache_func.cache_create(
+        f"Menu_{menu_id}", Menu.from_orm(menu).dict()
     )
-    update_data = {"dishes_count": submenu.dishes_count}
-    await cache_func.cache_update(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
+    update_data = SubMenu.from_orm(submenu).dict()
+    await cache_func.cache_create(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
 
     return Dish.from_orm(dish)
 
@@ -68,13 +71,13 @@ async def delete_dish(menu_id: int, submenu_id: int, id: int):
     menu.dishes_count -= 1
     db.delete(dish)
     db.commit()
-    key_cach_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
-    await cache_func.cache_delete(key_cach_name)
-    await cache_func.cache_update(
-        f"Menu_{menu_id}", {"dishes_count": menu.dishes_count}
+    key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
+    await cache_func.cache_delete(key_name)
+    await cache_func.cache_create(
+        f"Menu_{menu_id}", Menu.from_orm(menu).dict()
     )
-    update_data = {"dishes_count": submenu.dishes_count}
-    await cache_func.cache_update(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
+    update_data = SubMenu.from_orm(submenu).dict()
+    await cache_func.cache_create(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
     response = Delete
     response.status = True
     response.message = f"The dish {id} has been deleted"
@@ -83,8 +86,8 @@ async def delete_dish(menu_id: int, submenu_id: int, id: int):
 
 
 async def get_dish(menu_id: int, submenu_id: int, id: int):
-    key_cach_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
-    dish = await cache_func.cache_get(key_cach_name)
+    key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
+    dish = await cache_func.cache_get(key_name)
     if dish:
         return dish
     try:
@@ -105,20 +108,24 @@ async def get_dish(menu_id: int, submenu_id: int, id: int):
             detail="dish not found",
         )
     dish = Dish.from_orm(dish)
-    await cache_func.cache_create(key_cach_name, dish.dict())
+    await cache_func.cache_create(key_name, dish.dict())
 
     return dish
 
 
-async def update_dish(data: Data, id: int):
-    req = db.query(table.Dish).filter_by(id=id)
-    res = req.update(data.dict(exclude_unset=True))
+async def update_dish(data: Data, menu_id: int, submenu_id: int, id: int):
+    data = data.dict(exclude_unset=True)
+    res = db.query(table.Dish).filter_by(id=id).update(data)
     db.commit()
     if not res:
         raise _fastapi.HTTPException(
             status_code=404,
             detail=f"dish {id} not found",
         )
-    await cache_func.cache_update(f"Dish_{id}", data)
+    key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
+    res = await cache_func.cache_get(key_name)
+    if res:
+        res.update(data)
+        await cache_func.cache_create(key_name, res)
 
-    return Data.from_orm(data)
+    return data

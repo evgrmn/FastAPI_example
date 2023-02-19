@@ -36,8 +36,8 @@ async def delete_menu(id: int):
 
 
 async def get_menu(id: int):
-    key_cach_name = f"Menu_{id}"
-    res = await cache_func.cache_get(key_cach_name)
+    key_name = f"Menu_{id}"
+    res = await cache_func.cache_get(key_name)
     if res:
         return res
     try:
@@ -48,20 +48,25 @@ async def get_menu(id: int):
             detail="menu not found",
         )
     menu = Menu.from_orm(menu)
-    await cache_func.cache_create(key_cach_name, res.dict())
+    await cache_func.cache_create(key_name, menu.dict())
 
     return menu
 
 
 async def update_menu(data, id: int):
-    req = db.query(table.Menu).filter_by(id=id)
-    res = req.update(data.dict(exclude_unset=True))
+    data = data.dict(exclude_unset=True)    
+    res = db.query(table.Menu).filter_by(id=id).update(data)
     db.commit()
     if not res:
         raise _fastapi.HTTPException(
             status_code=404,
             detail="menu {id} not found",
         )
-    await cache_func.cache_update(f"Menu_{id}", data)
+    key_name = f"Menu_{id}"
+    res = await cache_func.cache_get(key_name)
+    if res:
+        await cache_func.cache_create(key_name, res.update(data))
 
-    return Data.from_orm(data)
+    return data
+
+

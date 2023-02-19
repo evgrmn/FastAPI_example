@@ -122,5 +122,7 @@ async def update_dish(
 
     return await _control.update_dish(
         data=data,
+        menu_id=menu_id,
+        submenu_id=submenu_id,
         id=dish_id,
     )

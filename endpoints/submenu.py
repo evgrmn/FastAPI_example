@@ -107,5 +107,6 @@ async def update_submenu(
 
     return await _control.update_submenu(
         data=data,
+        menu_id=menu_id,
         id=submenu_id,
     )

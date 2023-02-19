@@ -4,6 +4,7 @@ import cache_func
 import database.connect as table
 from database.connect import db
 from models.submenu import Data, Delete, SubMenu
+from models.menu import Menu
 
 
 async def get_submenus(menu_id: int):
@@ -23,13 +24,13 @@ async def create_submenu(data: Data, menu_id: int):
     submenu.menu_id = menu_id
     db.add(submenu)
     db.commit()
-    key_cach_name = f"Menu_{menu_id}_SubMenu_{submenu.id}"
+    key_name = f"Menu_{menu_id}_SubMenu_{submenu.id}"
     await cache_func.cache_create(
-        key_cach_name,
+        key_name,
         SubMenu.from_orm(submenu).dict(),
     )
-    await cache_func.cache_update(
-        f"Menu_{menu_id}", {"submenus_count": menu.submenus_count}
+    await cache_func.cache_create(
+        f"Menu_{menu_id}", Menu.from_orm(menu).dict()
     )
 
     return SubMenu.from_orm(submenu)
@@ -55,9 +56,9 @@ async def delete_submenu(menu_id: int, id: int):
     db.delete(submenu)
     db.commit()
     await cache_func.cache_delete_cascade(f"*SubMenu_{id}*")
-    await cache_func.cache_update(
+    await cache_func.cache_create(
         f"Menu_{menu_id}",
-        {"submenus_count": menu.submenus_count, "dishes_count": menu.dishes_count},
+        Menu.from_orm(menu).dict(),
     )
     response = Delete
     response.status = True
@@ -67,8 +68,8 @@ async def delete_submenu(menu_id: int, id: int):
 
 
 async def get_submenu(menu_id: int, id: int):
-    key_cach_name = f"Menu_{menu_id}_SubMenu_{id}"
-    submenu = await cache_func.cache_get(key_cach_name)
+    key_name = f"Menu_{menu_id}_SubMenu_{id}"
+    submenu = await cache_func.cache_get(key_name)
     if submenu:
         return submenu
     try:
@@ -84,20 +85,24 @@ async def get_submenu(menu_id: int, id: int):
             detail="submenu not found",
         )
     submenu = SubMenu.from_orm(submenu)
-    await cache_func.cache_create(key_cach_name, submenu.dict())
+    await cache_func.cache_create(key_name, submenu.dict())
 
     return submenu
 
 
-async def update_submenu(data: Data, id: int):
-    req = db.query(table.SubMenu).filter_by(id=id)
-    res = req.update(data.dict(exclude_unset=True))
+async def update_submenu(data: Data, menu_id: int, id: int):
+    data = data.dict(exclude_unset=True)
+    res = db.query(table.SubMenu).filter_by(id=id).update(data)
     db.commit()
     if not res:
         raise _fastapi.HTTPException(
             status_code=404,
             detail="submenu {id} not found",
         )
-    await cache_func.cache_update(f"SubMenu_{id}", data)
+    key_name = f"Menu_{menu_id}_SubMenu_{id}"
+    res = await cache_func.cache_get(key_name)
+    if res:
+        res.update(data)
+        await cache_func.cache_create(key_name, res)    
 
-    return Data.from_orm(data)
+    return data
