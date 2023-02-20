@@ -8,6 +8,14 @@ class Main(BaseModel):
         orm_mode = True
 
 
+class Dish(Main):
+    id: str
+    title: str
+    description: str
+    submenu_id: int
+    price: str
+
+
 class Data(Main):
     title: str
     description: str
@@ -18,10 +26,3 @@ class Delete(Main):
     status: bool
     message: str
 
-
-class Dish(Main):
-    id: str
-    title: str
-    description: str
-    submenu_id: int
-    price: str
