@@ -1,12 +1,11 @@
 import fastapi as _fastapi
 
-import cache_func
 import database.connect as table
 from database.connect import db
 from models.dish import Data, Delete, Dish
 from models.menu import Menu
 from models.submenu import SubMenu
-import json
+from caching import functions as cache
 
 
 async def get_dishes(submenu_id: int):
@@ -34,15 +33,15 @@ async def create_dish(data: Data, menu_id: int, submenu_id: int):
     db.add(dish)
     db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
-    await cache_func.cache_create(
+    await cache.set(
         key_name,
         Dish.from_orm(dish).dict(),
     )
-    await cache_func.cache_create(
+    await cache.set(
         f"Menu_{menu_id}", Menu.from_orm(menu).dict()
     )
     update_data = SubMenu.from_orm(submenu).dict()
-    await cache_func.cache_create(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
+    await cache.set(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
 
     return Dish.from_orm(dish)
 
@@ -72,12 +71,12 @@ async def delete_dish(menu_id: int, submenu_id: int, id: int):
     db.delete(dish)
     db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
-    await cache_func.cache_delete(key_name)
-    await cache_func.cache_create(
+    await cache.delete(key_name)
+    await cache.set(
         f"Menu_{menu_id}", Menu.from_orm(menu).dict()
     )
     update_data = SubMenu.from_orm(submenu).dict()
-    await cache_func.cache_create(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
+    await cache.set(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
     response = Delete
     response.status = True
     response.message = f"The dish {id} has been deleted"
@@ -87,7 +86,7 @@ async def delete_dish(menu_id: int, submenu_id: int, id: int):
 
 async def get_dish(menu_id: int, submenu_id: int, id: int):
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
-    dish = await cache_func.cache_get(key_name)
+    dish = await cache.get(key_name)
     if dish:
         return dish
     try:
@@ -108,7 +107,7 @@ async def get_dish(menu_id: int, submenu_id: int, id: int):
             detail="dish not found",
         )
     dish = Dish.from_orm(dish)
-    await cache_func.cache_create(key_name, dish.dict())
+    await cache.set(key_name, dish.dict())
 
     return dish
 
@@ -123,9 +122,9 @@ async def update_dish(data: Data, menu_id: int, submenu_id: int, id: int):
             detail=f"dish {id} not found",
         )
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
-    res = await cache_func.cache_get(key_name)
+    res = await cache.get(key_name)
     if res:
         res.update(data)
-        await cache_func.cache_create(key_name, res)
+        await cache.set(key_name, res)
 
     return data

@@ -1,9 +1,9 @@
 import fastapi as _fastapi
 
-import cache_func
 import database.connect as table
 from database.connect import db
 from models.menu import Data, Delete, Menu
+from caching import functions as cache
 
 
 async def get_menus():
@@ -15,7 +15,7 @@ async def create_menu(data: Data):
     db.add(data)
     db.commit()
     data = Menu.from_orm(data)
-    await cache_func.cache_create(f"Menu_{data.id}", data.dict())
+    await cache.set(f"Menu_{data.id}", data.dict())
 
     return data
 
@@ -27,7 +27,7 @@ async def delete_menu(id: int):
         db.commit()
     except Exception:
         raise _fastapi.HTTPException(status_code=404, detail="menu not found")
-    await cache_func.cache_delete_cascade(f"*Menu_{id}*")
+    await cache.delete_cascade(f"*Menu_{id}*")
     response = Delete
     response.status = True
     response.message = "The menu has been deleted"
@@ -37,7 +37,7 @@ async def delete_menu(id: int):
 
 async def get_menu(id: int):
     key_name = f"Menu_{id}"
-    res = await cache_func.cache_get(key_name)
+    res = await cache.get(key_name)
     if res:
         return res
     try:
@@ -48,7 +48,7 @@ async def get_menu(id: int):
             detail="menu not found",
         )
     menu = Menu.from_orm(menu)
-    await cache_func.cache_create(key_name, menu.dict())
+    await cache.set(key_name, menu.dict())
 
     return menu
 
@@ -63,9 +63,9 @@ async def update_menu(data, id: int):
             detail="menu {id} not found",
         )
     key_name = f"Menu_{id}"
-    res = await cache_func.cache_get(key_name)
+    res = await cache.get(key_name)
     if res:
-        await cache_func.cache_create(key_name, res.update(data))
+        await cache.set(key_name, res.update(data))
 
     return data
 

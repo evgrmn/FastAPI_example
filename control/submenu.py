@@ -1,10 +1,10 @@
 import fastapi as _fastapi
 
-import cache_func
 import database.connect as table
 from database.connect import db
 from models.submenu import Data, Delete, SubMenu
 from models.menu import Menu
+from caching import functions as cache
 
 
 async def get_submenus(menu_id: int):
@@ -25,11 +25,11 @@ async def create_submenu(data: Data, menu_id: int):
     db.add(submenu)
     db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu.id}"
-    await cache_func.cache_create(
+    await cache.set(
         key_name,
         SubMenu.from_orm(submenu).dict(),
     )
-    await cache_func.cache_create(
+    await cache.set(
         f"Menu_{menu_id}", Menu.from_orm(menu).dict()
     )
 
@@ -55,8 +55,8 @@ async def delete_submenu(menu_id: int, id: int):
     menu.submenus_count -= 1
     db.delete(submenu)
     db.commit()
-    await cache_func.cache_delete_cascade(f"*SubMenu_{id}*")
-    await cache_func.cache_create(
+    await cache.delete_cascade(f"*SubMenu_{id}*")
+    await cache.set(
         f"Menu_{menu_id}",
         Menu.from_orm(menu).dict(),
     )
@@ -69,7 +69,7 @@ async def delete_submenu(menu_id: int, id: int):
 
 async def get_submenu(menu_id: int, id: int):
     key_name = f"Menu_{menu_id}_SubMenu_{id}"
-    submenu = await cache_func.cache_get(key_name)
+    submenu = await cache.get(key_name)
     if submenu:
         return submenu
     try:
@@ -85,7 +85,7 @@ async def get_submenu(menu_id: int, id: int):
             detail="submenu not found",
         )
     submenu = SubMenu.from_orm(submenu)
-    await cache_func.cache_create(key_name, submenu.dict())
+    await cache.set(key_name, submenu.dict())
 
     return submenu
 
@@ -100,9 +100,9 @@ async def update_submenu(data: Data, menu_id: int, id: int):
             detail="submenu {id} not found",
         )
     key_name = f"Menu_{menu_id}_SubMenu_{id}"
-    res = await cache_func.cache_get(key_name)
+    res = await cache.get(key_name)
     if res:
         res.update(data)
-        await cache_func.cache_create(key_name, res)    
+        await cache.set(key_name, res)    
 
     return data

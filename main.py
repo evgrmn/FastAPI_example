@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import fastapi as _fastapi
 
-import description
+import config.description as descr
 from endpoints import _celery, dish, menu, submenu
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
-    description=description.description,
+    description=descr.description,
 )
 
 app.include_router(_celery.router, prefix="/api/v1", tags=["Celery task"])
