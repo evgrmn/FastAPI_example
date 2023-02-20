@@ -7,15 +7,15 @@ import httpx
 import pytest
 import pytest_asyncio
 
-import _models
+from database import connect
 from config.config import Variables as var
 from main import app
 
 pytestmark = pytest.mark.asyncio
 
 
-"""Создание таблиц в базе test """
-_models.Base.metadata.create_all(bind=_models.engine)
+#Create tables
+connect.Base.metadata.create_all(bind=connect.engine)
 
 
 @pytest.fixture(scope="session")
