@@ -15,20 +15,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-  ylab:
-    container_name: ylab
-    build:
-      context: .
-    env_file:
-      - .env-production
-    command: "uvicorn main:app --reload --host 0.0.0.0"
-    ports:
-      - "8000:8000"
-    networks:
-      - api_network
-    depends_on:
-      postgres:
-        condition: service_healthy
   redis:
     container_name: redis
     image: redis:latest

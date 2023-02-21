@@ -20,7 +20,7 @@ services:
     build:
       context: .
     env_file:
-      - tests/test.env
+      - tests/.env-tests
     command: "pytest tests/test_app.py -s -W ignore::DeprecationWarning"
     ports:
       - "8001:8000"

@@ -8,7 +8,7 @@ import pytest
 import pytest_asyncio
 
 from database import connect
-from config.config import Variables as var
+from .vars import Variables as var
 from main import app
 
 pytestmark = pytest.mark.asyncio
