@@ -2,21 +2,35 @@ import asyncio
 
 from celery import Celery
 
-import models as _models
+import _models
 
 celery_app = Celery(
     "worker",
     broker_url="amqp://guest:guest@rabbit:5672//",
     result_backend="rpc://",
 )
+'''celery_app = Celery(
+    "worker",
+    broker_url="amqp://guest:guest@localhost:5672//",
+    result_backend="rpc://",
+)'''
+
+
+
 celery_app.conf.task_routes = {"celery_worker.task_celery": "test-queue"}
+#celery_app.conf.task_routes = {"task_celery": "test-queue"}
+
+
 celery_app.conf.update(task_track_started=True)
 
 
 @celery_app.task(name="celery_worker.task_celery")
+#@celery_app.task(name="task_celery")
 def task_celery(file_name):
+    print('-------------1.1-------------')
     for el in _models.delete_model_dict:
         asyncio.run(_models.delete_table_data(el[1], el[0]))
+    print('-------------1.2-------------')
     menu_data = [
         {"model": "menu", "data": {"title": "Меню", "description": "Основное меню"}},
         {

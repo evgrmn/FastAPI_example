@@ -9,7 +9,9 @@ from xlsxwriter import Workbook
 
 from config.config import Config
 
-DATABASE_URL = Config.DB_URL
+from database.connect import db, Menu, SubMenu, Dish
+
+'''DATABASE_URL = Config.DB_URL
 engine = _sql.create_engine(DATABASE_URL)
 SessionLocal = _orm.sessionmaker(
     autocommit=False,
@@ -66,7 +68,7 @@ def get_db():
         db.close()
 
 
-db = next(get_db())
+db = next(get_db())'''
 
 
 # New functions
