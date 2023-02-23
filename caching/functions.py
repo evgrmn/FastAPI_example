@@ -4,9 +4,9 @@ import json
 
 import aioredis
 
-from config.config import Config
+from config.config import Const
 
-redis = aioredis.from_url(f"redis://{Config.REDIS_ADDRESS}")
+redis = aioredis.from_url(f"redis://{Const.REDIS_ADDRESS}")
 
 
 async def set(name, data):

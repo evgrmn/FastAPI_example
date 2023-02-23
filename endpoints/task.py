@@ -4,17 +4,18 @@ import fastapi as _fastapi
 from celery.result import AsyncResult
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
+import control.task as _control
 
 import _models
-import config.schemas as _schemas
-from config.cel_config import celery_app
+from config.config import Const
+from models.task import Task, Result
 
 router = APIRouter()
 
 
 @router.post(
     "/task",
-    response_model=_schemas.Task,
+    response_model=Task,
     status_code=201,
     summary="Fill database with test data",
 )
@@ -22,15 +23,13 @@ async def fill_database():
     """
     Выполнение задачи заполнения базы данных тестовыми данными
     """
-    file_name = "Menu.xlsx"
-    task = celery_app.send_task("celery_worker.task_celery", args=[file_name])
 
-    return {"message": "Task delivered", "task_id": f"{task}"}
+    return await _control.send_task(file_name=Const.MENU_FILE_NAME, task_name=Const.TASK_CELERY)
 
 
 @router.get(
     "/result/{task_id}",
-    response_model=_schemas.Result,
+    response_model=Result,
     status_code=200,
     summary="Get database as excel file",
 )
@@ -39,23 +38,19 @@ async def task_result(task_id: str):
     Получение результата задачи и запись данных в excel-файл
     """
     task = AsyncResult(task_id)
-
+    result = Result
+    result.task_id = task_id
+    result.status = task.status
     # Task not ready
     if not task.ready():
-        return {
-            "task_id": str(task_id),
-            "status": task.status,
-            "result": "",
-        }
+        result.result = ""
+        return Result.from_orm(result)
 
     task_result = task.get()
     await _models.get_xlsx_menu(task_result)
     # Task done
-    return {
-        "task_id": str(task_id),
-        "status": task.status,
-        "result": f"ylab:/app/{task_result}",
-    }
+    result.result = f"ylab:/app/{task_result}"
+    return Result.from_orm(result)
 
 
 @router.get(
@@ -67,10 +62,11 @@ async def download_file():
     """
     Скачивание excel-файл ресторанного меню
     """
-    file_path = "Menu.xlsx"
-    if os.path.isfile(file_path):
+    if os.path.isfile(Const.MENU_FILE_NAME):
         return FileResponse(
-            path=file_path, filename=file_path, media_type="multipart/form-data"
+            path=Const.MENU_FILE_NAME, 
+            filename=Const.MENU_FILE_NAME, 
+            media_type="multipart/form-data",
         )
     else:
         raise _fastapi.HTTPException(

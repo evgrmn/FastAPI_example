@@ -4,9 +4,9 @@ import sqlalchemy as _sql
 import sqlalchemy.ext.declarative as _declarative
 import sqlalchemy.orm as _orm
 
-from config.config import Config
+from config.config import Const
 
-DATABASE_URL = Config.DB_URL
+DATABASE_URL = Const.DB_URL
 engine = _sql.create_engine(DATABASE_URL)
 SessionLocal = _orm.sessionmaker(
     autocommit=False,

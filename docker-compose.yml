@@ -19,11 +19,11 @@ services:
     container_name: ylab
     build:
       context: .
-    env_file:
-      - .env-production
     command: "uvicorn main:app --reload --host 0.0.0.0"
     ports:
       - "8000:8000"
+    volumes:
+      - .:/app
     networks:
       - api_network
     depends_on:
@@ -56,7 +56,7 @@ services:
     container_name: celery_worker
     build:
       context: .
-    command: celery -A endpoints._celery.celery_app worker --loglevel=INFO -Q test-queue
+    command: celery -A config.cel_config.celery_app worker --loglevel=INFO -Q test-queue
     networks:
       - api_network
     depends_on:
