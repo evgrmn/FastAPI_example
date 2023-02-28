@@ -3,14 +3,14 @@ import fastapi as _fastapi
 import database.connect as table
 from caching import functions as cache
 from database.connect import db
-from models.menu import Data, Delete, Menu
+from models.menu import Menu, Menu_Data, Menu_Delete
 
 
 async def get_menus():
     return list(map(Menu.from_orm, db.query(table.Menu)))
 
 
-async def create_menu(data: Data):
+async def create_menu(data: Menu_Data):
     data = table.Menu(**data.dict())
     db.add(data)
     db.commit()
@@ -28,11 +28,11 @@ async def delete_menu(id: int):
     except Exception:
         raise _fastapi.HTTPException(status_code=404, detail="menu not found")
     await cache.delete_cascade(f"*Menu_{id}*")
-    response = Delete
+    response = Menu_Delete
     response.status = True
     response.message = "The menu has been deleted"
 
-    return Delete.from_orm(response)
+    return Menu_Delete.from_orm(response)
 
 
 async def get_menu(id: int):

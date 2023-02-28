@@ -2,16 +2,16 @@
     {
         "model": "menu",
         "data": {
-            "title": "Меню",
-            "description": "Основное меню",
+            "title": "BREAKFAST MENU",
+            "description": "EVERYDAY FROM 7AM TO 11AM",
             "submenus_count": 2,
             "dishes_count": 6
             }},
     {
         "model": "submenu",
         "data": {
-            "title": "Холодные закуски",
-            "description": "К пиву",
+            "title": "HOT BREAKFAST",
+            "description": "MANY IDEAS FOR BUSY MORNINGS",
             "menu_id": 1,
             "dishes_count": 3
         }
@@ -19,35 +19,35 @@
     {
         "model": "dish",
         "data": {
-            "title": "Сельдь Бисмарк",
-            "description": "Традиционное немецкое блюдо из маринованной сельди",
+            "title": "DISH 1",
+            "description": "DESCRIPTION OF DISH 1",
             "submenu_id": 1,
-            "price": 182.99
+            "price": 16.5
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Мясная тарелка",
-            "description": "Нарезка из ветчины, колбасных колечек, нескольких сортов сыра, фруктов и фокаччи",
+            "title": "DISH 2",
+            "description": "DESCRIPTION OF DISH 2",
             "submenu_id": 1,
-            "price": 215.36
+            "price": 8.5
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Рыбная тарелка",
-            "description": "Нарезка из креветок, кальмаров, раковых шеек, гребешков, лосося, скумбрии и красной икры",
+            "title": "DISH 3",
+            "description": "DESCRIPTION OF DISH 3",
             "submenu_id": 1,
-            "price": 265.57
+            "price": 18
         }
     },
     {
         "model": "submenu",
         "data": {
-            "title": "Рамен",
-            "description": "Горячий рамен",
+            "title": "HOT BEVERAGES",
+            "description": "HOT DRINKS TO KEEP YOU WARM THIS WINTER",
             "menu_id": 1,
             "dishes_count": 3
         }
@@ -55,35 +55,35 @@
     {
         "model": "dish",
         "data": {
-            "title": "Дайзу рамен",
-            "description": "Рамен на курином бульоне с куриными подушками и яйцом аджитама, яично-пшеничной лапшой, ростки зелени, грибами муэр и зеленым луком",
+            "title": "DRINK 1",
+            "description": "DESCRIPTION OF DRINK 1",
             "submenu_id": 2,
-            "price": 166.47
+            "price": 3.5
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Унаги рамен",
-            "description": "Рамен на нежном сливочном рыбном бульоне, с добавлением маринованного угря, грибов муэр, кунжута, зеленого лука",
+            "title": "DRINK 2",
+            "description": "DESCRIPTION OF DRINK 2",
             "submenu_id": 2,
-            "price": 168.25
+            "price": 5.5
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Чиизу Рамен",
-            "description": "Рамен на насыщенном сырном бульоне на основе кокосового молока, с добавлением куриной грудинки, яично - пшеничной лапши, мисо-матадоре, ростков зелени, листьев вакамэ",
+            "title": "DRINK 3",
+            "description": "DESCRIPTION OF DRINK 3",
             "submenu_id": 2,
-            "price": 132.88
+            "price": 6.5
         }
     },
     {
         "model": "menu",
         "data": {
-            "title": "Алкогольное меню",
-            "description": "Алкогольные напитки",
+            "title": "DINING MENU",
+            "description": "OUR DISHES ARE AVAILABLE AS A STARTER AS WELL AS A MAIN COURSE",
             "submenus_count": 2,
             "dishes_count": 6
         }
@@ -91,8 +91,8 @@
     {
         "model": "submenu",
         "data": {
-            "title": "Красные вина",
-            "description": "Для романтичного вечера",
+            "title": "ALL-DAY-DINING",
+            "description": "A CHOICE OF DISHES FROM BREAKFAST THROUGH TO BRUNCH, LUNCH AND DINNER",
             "menu_id": 2,
             "dishes_count": 3
         }
@@ -100,35 +100,35 @@
     {
         "model": "dish",
         "data": {
-            "title": "Шемен де Пап ля Ноблесс",
-            "description": "Вино красное — фруктовое, среднетелое, выдержанное в дубе",
+            "title": "DISH 1",
+            "description": "DESCRIPTION OF DISH 1",
             "submenu_id": 3,
-            "price": 2700.79
+            "price": 11
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Рипароссо Монтепульчано",
-            "description": "Вино красное, сухое",
+            "title": "DISH 2",
+            "description": "DESCRIPTION OF DISH 2",
             "submenu_id": 3,
-            "price": 3100.33
+            "price": 11
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Кьянти, Серристори",
-            "description": "Вино красное — элегантное, комплексное, не выдержанное в дубе",
+            "title": "DISH 3",
+            "description": "DESCRIPTION OF DISH 3",
             "submenu_id": 3,
-            "price": 1850.42
+            "price": 11
         }
     },
     {
         "model": "submenu",
         "data": {
-            "title": "Виски",
-            "description": "Для интересных бесед",
+            "title": "FROM THE GRILL",
+            "description": "OUR SPECIALTY",
             "menu_id": 2,
             "dishes_count": 3
         }
@@ -136,28 +136,28 @@
     {
         "model": "dish",
         "data": {
-            "title": "Джемисон",
-            "description": "Классический купажированный виски, проходящий 4-хлетнюю выдержку в дубовых бочках",
+            "title": "DISH 1",
+            "description": "DESCRIPTION OF DISH 1",
             "submenu_id": 4,
-            "price": 420.78
+            "price": 34
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Джек Дэниелс",
-            "description": "Характерен мягкий вкус, сочетает в себе карамельно-ванильные и древесные нотки. Легкий привкус дыма.",
+            "title": "DISH 2",
+            "description": "DESCRIPTION OF DISH 2",
             "submenu_id": 4,
-            "price": 440.11
+            "price": 43
         }
     },
     {
         "model": "dish",
         "data": {
-            "title": "Чивас Ригал",
-            "description": "Это купаж высококачественных солодовых и зерновых виски, выдержанных как минимум в течение 12 лет, что придает напитку роскошные нотки меда, ванили и спелых яблок.",
+            "title": "DISH 3",
+            "description": "DESCRIPTION OF DISH 3",
             "submenu_id": 4,
-            "price": 520.08
+            "price": 12
         }
     }
 ]

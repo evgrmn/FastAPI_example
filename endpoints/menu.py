@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 import control.menu as _control
-from models.menu import Data, Delete, Menu
+from models.menu import Menu, Menu_Data, Menu_Delete
 
 router = APIRouter()
 
@@ -13,7 +13,7 @@ router = APIRouter()
 )
 async def get_menus():
     """
-    Получение списка меню.
+    Getting a menu list.
     """
 
     return await _control.get_menus()
@@ -26,10 +26,10 @@ async def get_menus():
     summary="Create a new menu",
 )
 async def create_menu(
-    data: Data,
+    data: Menu_Data,
 ):
     """
-    Создание меню. 'title' - название меню, 'description' - описание меню
+    Menu creation. 'title' - menu title, 'description' - menu description.
     """
 
     return await _control.create_menu(data=data)
@@ -37,15 +37,15 @@ async def create_menu(
 
 @router.delete(
     "/{menu_id}",
-    response_model=Delete,
+    response_model=Menu_Delete,
     summary="Delete menu",
 )
 async def delete_menu(
     menu_id: int,
 ):
     """
-    Удаление меню. 'menu_id' - id в таблице 'menu'.
-    Удаление меню удалит все связанные с ним подменю и блюда.
+    Removing a menu. 'menu_id' - id in the 'menu' table.
+    Deleting a menu will delete all submenus and dishes associated with it.
     """
 
     return await _control.delete_menu(id=menu_id)
@@ -60,7 +60,7 @@ async def get_menu(
     menu_id: int,
 ):
     """
-    Получение определенного меню. 'menu_id' - id меню в таблице 'menu'
+    Get a specific menu. 'menu_id' - menu id in table 'menu'.
     """
 
     return await _control.get_menu(
@@ -70,17 +70,17 @@ async def get_menu(
 
 @router.patch(
     "/{menu_id}",
-    response_model=Data,
+    response_model=Menu_Data,
     summary="Update menu",
 )
 async def update_menu(
-    data: Data,
+    data: Menu_Data,
     menu_id: int,
 ):
     """
-    Обновление определенного.
-    'menu_id' - id в таблице 'menu',
-    'title' - название меню, 'description' - описание меню
+    Update a specific menu.
+    'menu_id' - id in the 'menu' table,
+    'title' - menu title, 'description' - menu description.
     """
 
     return await _control.update_menu(

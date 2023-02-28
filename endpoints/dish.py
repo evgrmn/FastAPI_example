@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 import control.dish as _control
-from models.dish import Data, Delete, Dish
+from models.dish import Dish, Dish_Data, Dish_Delete
 
 router = APIRouter()
 
@@ -16,9 +16,9 @@ async def get_dishes(
     submenu_id: int,
 ):
     """
-    Получение списка блюд.
-    'menu_id' - id меню, с которым связано подменю данного блюда,
-    'submenu_id' - id подменю данного блюда.
+    Getting a list of dishes.
+    'menu_id' - menu id, taking into account the submenu of this dish,
+    'submenu_id' - submenu id of this dish.
     """
 
     return await _control.get_dishes(
@@ -33,16 +33,18 @@ async def get_dishes(
     summary="Create a new dish",
 )
 async def create_dish(
-    data: Data,
+    data: Dish_Data,
     menu_id: int,
     submenu_id: int,
 ):
     """
-    Создание нового блюда.
-    'menu_id' - id меню, с которым связано подменю данного блюда,
-    'submenu_id' - id подменю данного блюда.
-    'title' - название блюда, 'description' - описание блюда,
-    'price' - цена блюда
+    Creating a new dish
+    'menu_id' - id of the menu with which the submenu
+    of this dish is associated,
+    'submenu_id' - submenu id of this dish.
+    'title' - the name of the dish,
+    'description' - the description of the dish,
+    'price' - the price of the dish.
     """
 
     return await _control.create_dish(
@@ -54,7 +56,7 @@ async def create_dish(
 
 @router.delete(
     "/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
-    response_model=Delete,
+    response_model=Dish_Delete,
     summary="Delete dish",
 )
 async def delete_dish(
@@ -63,10 +65,11 @@ async def delete_dish(
     dish_id: int,
 ):
     """
-    Удаление определенного блюда.
-    'menu_id' - id меню, с которым связано подменю удаляемого блюда,
-    'submenu_id' - id подменю удаляемого блюда.
-    'dish_id' - id удаляемого блюда.
+    Removing a specific dish.
+    'menu_id' - id of the menu with which the submenu of
+    the removed dish is associated,
+    'submenu_id' - submenu id of the removed dish.
+    'dish_id' - id of the dish to be deleted.
     """
 
     return await _control.delete_dish(
@@ -87,10 +90,11 @@ async def get_dish(
     dish_id: int,
 ):
     """
-    Получение определенного блюда.
-    'menu_id' - id меню, с которым связано подменю данного блюда,
-    'submenu_id' - id подменю данного блюда.
-    'dish_id' - id требуемого блюда.
+    Getting a certain meal.
+    'menu_id' - id of the menu with which the submenu
+    of this dish is associated,
+    'submenu_id' - submenu id of this dish.
+    'dish_id' - id of the required dish.
     """
 
     return await _control.get_dish(
@@ -102,22 +106,23 @@ async def get_dish(
 
 @router.patch(
     "/{menu_id}/submenus/{submenu_id}/dishes/{dish_id}",
-    response_model=Data,
+    response_model=Dish_Data,
     summary="Update dish",
 )
 async def update_dish(
-    data: Data,
+    data: Dish_Data,
     menu_id: int,
     submenu_id: int,
     dish_id: int,
 ):
     """
-    Обновление определенного блюда.
-    'menu_id' - id меню, с которым связано подменю блюда,
-    'submenu_id' - id подменю блюда.
-    'dish_id' - id блюда.
-    'title' - новое название блюда, 'description' - новое описание блюда,
-    'price' - новая цена блюда
+    Updating a particular dish.
+    'menu_id' - id of the menu the dish submenu is associated with,
+    'submenu_id' - dish submenu id.
+    'dish_id' - dish id.
+    'title' - new name of the dish,
+    'description' - new description of the dish,
+    'price' - the new price of the dish.
     """
 
     return await _control.update_dish(

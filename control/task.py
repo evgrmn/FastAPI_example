@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 from sqlalchemy.sql import text
 
 from database.connect import Dish, Menu, SubMenu, db
-from models.task import Result, Task
+from models.task import Fill, Result, Task
 from queues.task import download_database
 
 
@@ -30,8 +30,10 @@ async def fill_database():
         db.add(data)
         db.commit()
         db.refresh(data)
+    response = Fill
+    response.result = "Database filled with data"
 
-    return {"result": "Database filled with data"}
+    return Fill.from_orm(response)
 
 
 async def send_task():

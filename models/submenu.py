@@ -16,11 +16,11 @@ class SubMenu(Main):
     dishes_count: int
 
 
-class Data(Main):
+class SubMenu_Data(Main):
     title: str
     description: str
 
 
-class Delete(Main):
+class SubMenu_Delete(Main):
     status: bool
     message: str

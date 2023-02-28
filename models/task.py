@@ -3,22 +3,21 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
-class Task(BaseModel):
-    message: str
-    task_id: str
-
+class Main(BaseModel):
     class Config:
         orm_mode = True
 
 
-class Result(BaseModel):
+class Task(Main):
+    message: str
+    task_id: str
+
+
+class Result(Main):
     task_id: str
     status: str
     result: str
 
-    class Config:
-        orm_mode = True
 
-
-class Fill(BaseModel):
+class Fill(Main):
     result: str

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 import control.submenu as _control
-from models.submenu import Data, Delete, SubMenu
+from models.submenu import SubMenu, SubMenu_Data, SubMenu_Delete
 
 router = APIRouter()
 
@@ -15,8 +15,8 @@ async def get_submenus(
     menu_id: int,
 ):
     """
-    Получение списка всех подменю, которые входят в состав определенного меню.
-    'menu_id' - id меню в таблице 'menu'.
+    Getting a list of all submenus that are part of a specific menu.
+    'menu_id' - menu id in the 'menu' table.
     """
 
     return await _control.get_submenus(
@@ -31,13 +31,13 @@ async def get_submenus(
     summary="Create a new submenu",
 )
 async def create_submenu(
-    data: Data,
+    data: SubMenu_Data,
     menu_id: int,
 ):
     """
-    Создание нового подменю.
-    'menu_id' - id меню в таблице 'menu',
-    'title' - название подменю, 'description' - описание подменю
+    Create a new submenu.
+    'menu_id' - menu id in the 'menu' table,
+    'title' - submenu title, 'description' - submenu description.
     """
 
     return await _control.create_submenu(data=data, menu_id=menu_id)
@@ -45,7 +45,7 @@ async def create_submenu(
 
 @router.delete(
     "/{menu_id}/submenus/{submenu_id}",
-    response_model=Delete,
+    response_model=SubMenu_Delete,
     summary="Delete submenu",
 )
 async def delete_submenu(
@@ -53,10 +53,10 @@ async def delete_submenu(
     submenu_id: int,
 ):
     """
-    Удаление определенного подменю.
-    'menu_id' - id меню в таблице 'menu',
-    'submenu_id' - id подменю в таблице 'submenu'.
-    Удаление подменю удалит все его блюда.
+    Removing a specific submenu.
+    'menu_id' - menu id in the 'menu' table,
+    'submenu_id' - submenu id in the 'submenu' table.
+    Deleting a submenu will delete all of its dishes.
     """
 
     return await _control.delete_submenu(
@@ -75,10 +75,10 @@ async def get_submenu(
     submenu_id: int,
 ):
     """
-    Получение определенного подменю.
-    'menu_id' - id меню, с которым связано
-    требуемое подменю, в таблице 'menu',
-    'submenu_id' - id требуемого подменю в таблице 'submenu'.
+    Removing a specific submenu.
+    'menu_id' - menu id in the 'menu' table,
+    'submenu_id' - submenu id in the 'submenu' table.
+    Deleting a submenu will delete all of its dishes.
     """
 
     return await _control.get_submenu(
@@ -89,20 +89,20 @@ async def get_submenu(
 
 @router.patch(
     "/{menu_id}/submenus/{submenu_id}",
-    response_model=Data,
+    response_model=SubMenu_Data,
     summary="Update submenu",
 )
 async def update_submenu(
-    data: Data,
+    data: SubMenu_Data,
     menu_id: int,
     submenu_id: int,
 ):
     """
-    Обновление определенного подменю.
-    'menu_id' - id меню, с которым связано
-    требуемое подменю, в таблице 'menu',
-    'submenu_id' - id требуемого подменю в таблице 'submenu'.
-    'title' - новое название поменю, 'description' - новое описание меню
+    Update a specific submenu.
+    'menu_id' - id of the menu to which it is associated
+    the required submenu, in the 'menu' table,
+    'submenu_id' - id of the required submenu in the 'submenu' table.
+    'title' - new menu title, 'description' - new menu description.
     """
 
     return await _control.update_submenu(

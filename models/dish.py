@@ -16,12 +16,12 @@ class Dish(Main):
     price: str
 
 
-class Data(Main):
+class Dish_Data(Main):
     title: str
     description: str
     price: str
 
 
-class Delete(Main):
+class Dish_Delete(Main):
     status: bool
     message: str

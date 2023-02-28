@@ -3,7 +3,7 @@ import fastapi as _fastapi
 import database.connect as table
 from caching import functions as cache
 from database.connect import db
-from models.dish import Data, Delete, Dish
+from models.dish import Dish, Dish_Data, Dish_Delete
 from models.menu import Menu
 from models.submenu import SubMenu
 
@@ -13,7 +13,7 @@ async def get_dishes(submenu_id: int):
     return list(map(Dish.from_orm, res))
 
 
-async def create_dish(data: Data, menu_id: int, submenu_id: int):
+async def create_dish(data: Dish_Data, menu_id: int, submenu_id: int):
     try:
         submenu = db.query(table.SubMenu).filter_by(id=submenu_id).one()
     except Exception:
@@ -73,11 +73,11 @@ async def delete_dish(menu_id: int, submenu_id: int, id: int):
     await cache.set(f"Menu_{menu_id}", Menu.from_orm(menu).dict())
     update_data = SubMenu.from_orm(submenu).dict()
     await cache.set(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
-    response = Delete
+    response = Dish_Delete
     response.status = True
     response.message = f"The dish {id} has been deleted"
 
-    return Delete.from_orm(response)
+    return Dish_Delete.from_orm(response)
 
 
 async def get_dish(menu_id: int, submenu_id: int, id: int):
@@ -108,7 +108,7 @@ async def get_dish(menu_id: int, submenu_id: int, id: int):
     return dish
 
 
-async def update_dish(data: Data, menu_id: int, submenu_id: int, id: int):
+async def update_dish(data: Dish_Data, menu_id: int, submenu_id: int, id: int):
     data = data.dict(exclude_unset=True)
     res = db.query(table.Dish).filter_by(id=id).update(data)
     db.commit()
