@@ -1,12 +1,14 @@
-import fastapi as _fastapi
-from models.task import Task, Result
-import os.path
-from fastapi.responses import FileResponse
-from celery.result import AsyncResult
 import json
-from queues.task import download_database
-from database.connect import db, Menu, SubMenu, Dish
+import os.path
+
+import fastapi as _fastapi
+from celery.result import AsyncResult
+from fastapi.responses import FileResponse
 from sqlalchemy.sql import text
+
+from database.connect import Dish, Menu, SubMenu, db
+from models.task import Result, Task
+from queues.task import download_database
 
 
 async def fill_database():
@@ -16,13 +18,13 @@ async def fill_database():
         db.execute(text(f"ALTER SEQUENCE {table_name}_id_seq RESTART WITH 1"))
         db.commit()
     try:
-        with open('config/data.json') as f:
+        with open("config/data.json") as f:
             menu_data = json.loads(f.read())
     except Exception:
         raise _fastapi.HTTPException(
             status_code=404,
             detail="file not found",
-        )    
+        )
     for el in menu_data:
         data = model_dict[el["model"]](**el["data"])
         db.add(data)
@@ -57,8 +59,8 @@ async def task_result(task_id: str):
     file_name = task.get()
     if os.path.isfile(f"sharefiles/{file_name}"):
         return FileResponse(
-            path=f"sharefiles/{file_name}", 
-            filename=file_name, 
+            path=f"sharefiles/{file_name}",
+            filename=file_name,
             media_type="multipart/form-data",
         )
     else:
@@ -66,4 +68,3 @@ async def task_result(task_id: str):
             status_code=404,
             detail="file not found",
         )
-

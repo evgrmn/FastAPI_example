@@ -1,8 +1,8 @@
 [
     {
-        "model": "menu", 
+        "model": "menu",
         "data": {
-            "title": "Меню", 
+            "title": "Меню",
             "description": "Основное меню",
             "submenus_count": 2,
             "dishes_count": 6
@@ -46,8 +46,8 @@
     {
         "model": "submenu",
         "data": {
-            "title": "Рамен", 
-            "description": "Горячий рамен", 
+            "title": "Рамен",
+            "description": "Горячий рамен",
             "menu_id": 1,
             "dishes_count": 3
         }

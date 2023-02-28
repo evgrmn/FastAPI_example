@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel
 
+
 class Main(BaseModel):
     class Config:
         orm_mode = True
@@ -23,4 +24,3 @@ class Data(Main):
 class Delete(Main):
     status: bool
     message: str
-

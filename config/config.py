@@ -12,4 +12,3 @@ class Env:
     REDIS_ADDRESS = os.getenv("REDIS_ADDRESS")
     MENU_FILE_NAME = os.getenv("MENU_FILE_NAME")
     TASK_CELERY = os.getenv("TASK_CELERY")
-

@@ -1,10 +1,10 @@
 import fastapi as _fastapi
 
 import database.connect as table
-from database.connect import db
-from models.submenu import Data, Delete, SubMenu
-from models.menu import Menu
 from caching import functions as cache
+from database.connect import db
+from models.menu import Menu
+from models.submenu import Data, Delete, SubMenu
 
 
 async def get_submenus(menu_id: int):
@@ -29,9 +29,7 @@ async def create_submenu(data: Data, menu_id: int):
         key_name,
         SubMenu.from_orm(submenu).dict(),
     )
-    await cache.set(
-        f"Menu_{menu_id}", Menu.from_orm(menu).dict()
-    )
+    await cache.set(f"Menu_{menu_id}", Menu.from_orm(menu).dict())
 
     return SubMenu.from_orm(submenu)
 
@@ -103,6 +101,6 @@ async def update_submenu(data: Data, menu_id: int, id: int):
     res = await cache.get(key_name)
     if res:
         res.update(data)
-        await cache.set(key_name, res)    
+        await cache.set(key_name, res)
 
     return data

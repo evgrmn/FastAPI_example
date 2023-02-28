@@ -14,7 +14,7 @@ class SubMenu(Main):
     description: str
     menu_id: int
     dishes_count: int
-    
+
 
 class Data(Main):
     title: str
@@ -24,4 +24,3 @@ class Data(Main):
 class Delete(Main):
     status: bool
     message: str
-

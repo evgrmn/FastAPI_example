@@ -8,13 +8,14 @@ import pytest
 import pytest_asyncio
 
 from database import connect
-from .vars import Variables as var
 from main import app
+
+from .vars import Variables as var
 
 pytestmark = pytest.mark.asyncio
 
 
-#Create tables
+# Create tables
 connect.Base.metadata.create_all(bind=connect.engine)
 
 

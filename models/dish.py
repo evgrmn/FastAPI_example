@@ -25,4 +25,3 @@ class Data(Main):
 class Delete(Main):
     status: bool
     message: str
-

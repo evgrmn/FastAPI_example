@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-import control.task as _control
 
-from models.task import Task, Fill
+import control.task as _control
+from models.task import Fill, Task
 
 router = APIRouter()
 
@@ -31,13 +31,13 @@ async def send_task():
     Запись данных в excel-файл
     """
 
-    #return await _control.send_task(task_id=task_id)
+    # return await _control.send_task(task_id=task_id)
     return await _control.send_task()
 
 
 @router.get(
     "/result/{task_id}",
-    #response_model=Result,
+    # response_model=Result,
     status_code=200,
     summary="Get database as excel file",
 )
@@ -47,4 +47,3 @@ async def task_result(task_id: str):
     """
 
     return await _control.task_result(task_id=task_id)
-

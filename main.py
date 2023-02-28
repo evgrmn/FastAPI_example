@@ -3,7 +3,7 @@ from __future__ import annotations
 import fastapi as _fastapi
 
 import config.description as descr
-from endpoints import task, dish, menu, submenu
+from endpoints import dish, menu, submenu, task
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",

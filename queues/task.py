@@ -1,9 +1,10 @@
-from .connect import celery_app
-from database.connect import db
-from xlsxwriter import Workbook
-from config.config import Env
 from sqlalchemy.sql import text
+from xlsxwriter import Workbook
 
+from config.config import Env
+from database.connect import db
+
+from .connect import celery_app
 
 
 @celery_app.task
@@ -68,6 +69,5 @@ def download_database():
             col = ordered_list.index(_key)
             ws.write(row, col, _value)
     wb.close()
-
 
     return Env.MENU_FILE_NAME

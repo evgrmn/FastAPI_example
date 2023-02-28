@@ -1,11 +1,11 @@
 import fastapi as _fastapi
 
 import database.connect as table
+from caching import functions as cache
 from database.connect import db
 from models.dish import Data, Delete, Dish
 from models.menu import Menu
 from models.submenu import SubMenu
-from caching import functions as cache
 
 
 async def get_dishes(submenu_id: int):
@@ -37,9 +37,7 @@ async def create_dish(data: Data, menu_id: int, submenu_id: int):
         key_name,
         Dish.from_orm(dish).dict(),
     )
-    await cache.set(
-        f"Menu_{menu_id}", Menu.from_orm(menu).dict()
-    )
+    await cache.set(f"Menu_{menu_id}", Menu.from_orm(menu).dict())
     update_data = SubMenu.from_orm(submenu).dict()
     await cache.set(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
 
@@ -72,9 +70,7 @@ async def delete_dish(menu_id: int, submenu_id: int, id: int):
     db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
     await cache.delete(key_name)
-    await cache.set(
-        f"Menu_{menu_id}", Menu.from_orm(menu).dict()
-    )
+    await cache.set(f"Menu_{menu_id}", Menu.from_orm(menu).dict())
     update_data = SubMenu.from_orm(submenu).dict()
     await cache.set(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
     response = Delete

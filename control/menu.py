@@ -1,9 +1,9 @@
 import fastapi as _fastapi
 
 import database.connect as table
+from caching import functions as cache
 from database.connect import db
 from models.menu import Data, Delete, Menu
-from caching import functions as cache
 
 
 async def get_menus():
@@ -54,7 +54,7 @@ async def get_menu(id: int):
 
 
 async def update_menu(data, id: int):
-    data = data.dict(exclude_unset=True)    
+    data = data.dict(exclude_unset=True)
     res = db.query(table.Menu).filter_by(id=id).update(data)
     db.commit()
     if not res:
@@ -68,5 +68,3 @@ async def update_menu(data, id: int):
         await cache.set(key_name, res.update(data))
 
     return data
-
-
