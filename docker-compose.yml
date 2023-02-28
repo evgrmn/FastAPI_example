@@ -19,11 +19,12 @@ services:
     container_name: ylab
     build:
       context: .
-    command: "uvicorn main:app --reload --host 0.0.0.0"
+    command: uvicorn main:app --reload --host 0.0.0.0 --reload-exclude sharefiles
     ports:
       - "8000:8000"
     volumes:
       - .:/app
+      - ./sharefiles:/app/sharefiles
     networks:
       - api_network
     depends_on:
@@ -56,7 +57,9 @@ services:
     container_name: celery_worker
     build:
       context: .
-    command: celery -A config.cel_config.celery_app worker --loglevel=INFO -Q test-queue
+    command: celery -A queues.connect worker --loglevel=INFO
+    volumes:
+      - ./sharefiles:/app/sharefiles
     networks:
       - api_network
     depends_on:

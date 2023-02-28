@@ -18,3 +18,7 @@ class Result(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Fill(BaseModel):
+    result: str

@@ -7,8 +7,6 @@ import sqlalchemy.orm as _orm
 from sqlalchemy.sql import text
 from xlsxwriter import Workbook
 
-from config.config import Const
-
 from database.connect import db, Menu, SubMenu, Dish
 
 '''DATABASE_URL = Config.DB_URL
