@@ -29,6 +29,17 @@ Peculiarities:
 
 Once launched, the API is available at http://localhost:8000/docs
 
+RabbitMQ is available at http://localhost:15672 **Username: guest, Password: guest**
+
+PostgreSQL can be conncted:
+
+- **Host: localhost**
+- **Port: 5433**
+- **Username: postgres**
+- **Password: password**
+- **Database: fastapi_database**
+
+
 ## Run Pytest
 
 Creating containers for testing and running Pytest:
