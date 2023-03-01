@@ -35,6 +35,6 @@ Creating containers for testing and running Pytest:
 
 - docker-compose -f docker-compose.tests.yml up --build
 
-Restarting the test script:
+Restarting the test script while test_redis and test_postgr containers are running:
 
 - docker start -ai test_ylab
