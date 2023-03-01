@@ -1,5 +1,7 @@
 # FastAPI_example
 
+![](https://img.shields.io/badge/python-3.10-blue?style=flat-square)
+
 ## Ресторанное меню
 
 Описание:
