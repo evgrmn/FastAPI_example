@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/python-3.10-blue?style=flat-square) ![](https://img.shields.io/badge/fastapi-0.89.1-critical?style=flat-square) ![](https://img.shields.io/badge/SQLAlchemy-2.0.0-orange?style=flat-square)
 
-![](https://badgen.net/badge/:subject/:status/:blue)
+![](https://badgen.net/badge/:subject/:status/blue)
 
 ## Ресторанное меню
 
