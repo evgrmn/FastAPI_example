@@ -14,7 +14,7 @@ router = APIRouter()
 )
 async def fill_database():
     """
-    Выполнение задачи заполнения базы данных тестовыми данными
+    Filling the database with test data from the config/data.json file.
     """
 
     return await _control.fill_database()
@@ -24,25 +24,25 @@ async def fill_database():
     "/task/send",
     response_model=Task,
     status_code=201,
-    summary="Save menu in excel file",
+    summary="Save database data in excel file",
 )
 async def send_task():
     """
-    Запись данных в excel-файл
+    Write data to excel file. The database will be saved in the "sharefiles" folder.
     """
 
     return await _control.send_task()
 
 
 @router.get(
-    "/result/{task_id}",
+    "/result/task/{task_id}",
     response_model=Result,
     status_code=200,
     summary="Get database as excel file",
 )
 async def task_result(task_id: str):
     """
-    Получение результата задачи и запись данных в excel-файл
+    Download the database using celery task_id.
     """
 
     return await _control.task_result(task_id=task_id)
