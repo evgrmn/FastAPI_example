@@ -16,11 +16,12 @@ Description:
 
 Peculiarities:
 
-- Uses Docker containerization.
+- Uses Docker containerization
 - Redis caching
 - ORM SQLAlchemy
 - Pydantic data validation
 - Pytest testing
+- Celery background task
 
 ## Creating containers and running the application:
 
@@ -37,11 +38,3 @@ Creating containers for testing and running Pytest:
 Restarting the test script:
 
 - docker start -ai test_ylab
-
-## Celery
-
-Для работы с Excel-файлом ресторанного меню реализованы три эндпоинта:
-
-1. /api/v1/task - заполняет базу данных тестовыми данными и отправляет задачу в очередь
-2. /api/v1/result - проверяет готовность задачи. Excel-файл записывается в контейнер 'ylab', папка 'app'
-3. /api/v1/task/download-file - скачивает готовый файл
