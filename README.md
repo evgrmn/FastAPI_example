@@ -1,6 +1,6 @@
 # FastAPI_example
 
-![](https://badgen.net/badge/Python/3.10/blue) ![](https://badgen.net/badge/FastAPI/0.89.1/gray) ![](https://badgen.net/badge/SQLAlchemy/2.0.0/red) ![](https://badgen.net/badge/Pytest/7.2.1/blue) ![](https://badgen.net/badge/Redis/4.4.2/green)
+![](https://badgen.net/badge/Python/3.10/blue) ![](https://badgen.net/badge/FastAPI/0.89.1/gray) ![](https://badgen.net/badge/SQLAlchemy/2.0.0/red) ![](https://badgen.net/badge/Pytest/7.2.1/blue) ![](https://badgen.net/badge/Redis/4.4.2/green) ![](https://badgen.net/badge/Postgresql/15.1/cyan?icon=postgresql)
 
 ## Ресторанное меню
 
