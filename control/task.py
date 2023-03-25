@@ -5,18 +5,17 @@ import fastapi as _fastapi
 from celery.result import AsyncResult
 from fastapi.responses import FileResponse
 from sqlalchemy.sql import text
+from sqlalchemy import Sequence
 
-from database.connect import Dish, Menu, SubMenu, db
+from database.connect import Dish, Menu, SubMenu, db, drop_tables, create_tables
 from models.task import Fill, Result, Task
 from queues.task import download_database
 
 
 async def fill_database():
+    drop_tables()
+    create_tables()
     model_dict = {"dish": Dish, "submenu": SubMenu, "menu": Menu}
-    for table_name, model in model_dict.items():
-        db.query(model).delete()
-        db.execute(text(f"ALTER SEQUENCE {table_name}_id_seq RESTART WITH 1"))
-        db.commit()
     try:
         with open("config/data.json") as f:
             menu_data = json.loads(f.read())
@@ -30,6 +29,7 @@ async def fill_database():
         db.add(data)
         db.commit()
         db.refresh(data)
+        db.close()
     response = Fill
     response.result = "Database filled with data"
 
@@ -60,6 +60,7 @@ async def task_result(task_id: str):
     # Task done
     file_name = task.get()
     if os.path.isfile(f"sharefiles/{file_name}"):
+
         return FileResponse(
             path=f"sharefiles/{file_name}",
             filename=file_name,

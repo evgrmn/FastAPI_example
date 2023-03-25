@@ -57,9 +57,16 @@ class Dish(Base):
     price = _sql.Column(_sql.String, index=True)
 
 
+def drop_tables():
+    Base.metadata.drop_all(bind=engine)
+
+
+def create_tables():
+    Base.metadata.create_all(bind=engine)
+
+
 db = SessionLocal()
 db.close()
 
 
-# Create tables
-Base.metadata.create_all(bind=engine)
+create_tables()
