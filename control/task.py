@@ -4,10 +4,8 @@ import os.path
 import fastapi as _fastapi
 from celery.result import AsyncResult
 from fastapi.responses import FileResponse
-from sqlalchemy.sql import text
-from sqlalchemy import Sequence
 
-from database.connect import Dish, Menu, SubMenu, db, drop_tables, create_tables
+from database.connect import Dish, Menu, SubMenu, create_tables, db, drop_tables
 from models.task import Fill, Result, Task
 from queues.task import download_database
 
@@ -60,7 +58,6 @@ async def task_result(task_id: str):
     # Task done
     file_name = task.get()
     if os.path.isfile(f"sharefiles/{file_name}"):
-
         return FileResponse(
             path=f"sharefiles/{file_name}",
             filename=file_name,
