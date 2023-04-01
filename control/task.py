@@ -11,6 +11,7 @@ from queues.task import download_database
 
 
 async def fill_database():
+    db.close()
     drop_tables()
     create_tables()
     model_dict = {"dish": Dish, "submenu": SubMenu, "menu": Menu}
@@ -27,7 +28,7 @@ async def fill_database():
         db.add(data)
         db.commit()
         db.refresh(data)
-        db.close()
+    db.close()
     response = Fill
     response.result = "Database filled with data"
 
