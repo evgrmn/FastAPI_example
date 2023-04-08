@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 import control.task as _control
 from models.task import Fill, Result, Task
+from sqlalchemy.ext.asyncio import AsyncSession
+from database.connect import session
 
 router = APIRouter()
 
@@ -12,12 +14,14 @@ router = APIRouter()
     status_code=201,
     summary="Fill database with test data",
 )
-async def fill_database():
+async def fill_database(
+    db: AsyncSession = Depends(session),
+):
     """
     Filling the database with test data from the config/data.json file.
     """
 
-    return await _control.fill_database()
+    return await _control.fill_database(db=db)
 
 
 @router.post(

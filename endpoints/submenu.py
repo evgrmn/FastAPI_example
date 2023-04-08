@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 import control.submenu as _control
 from models.submenu import SubMenu, SubMenu_Data, SubMenu_Delete
+from sqlalchemy.ext.asyncio import AsyncSession
+from database.connect import session
 
 router = APIRouter()
 
@@ -13,6 +15,7 @@ router = APIRouter()
 )
 async def get_submenus(
     menu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Getting a list of all submenus that are part of a specific menu.
@@ -21,6 +24,7 @@ async def get_submenus(
 
     return await _control.get_submenus(
         menu_id=menu_id,
+        db=db,
     )
 
 
@@ -33,6 +37,7 @@ async def get_submenus(
 async def create_submenu(
     data: SubMenu_Data,
     menu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Create a new submenu.
@@ -40,7 +45,7 @@ async def create_submenu(
     'title' - submenu title, 'description' - submenu description.
     """
 
-    return await _control.create_submenu(data=data, menu_id=menu_id)
+    return await _control.create_submenu(data=data, menu_id=menu_id, db=db)
 
 
 @router.delete(
@@ -51,6 +56,7 @@ async def create_submenu(
 async def delete_submenu(
     menu_id: int,
     submenu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Removing a specific submenu.
@@ -59,10 +65,7 @@ async def delete_submenu(
     Deleting a submenu will delete all of its dishes.
     """
 
-    return await _control.delete_submenu(
-        menu_id=menu_id,
-        id=submenu_id,
-    )
+    return await _control.delete_submenu(menu_id=menu_id, id=submenu_id, db=db)
 
 
 @router.get(
@@ -73,6 +76,7 @@ async def delete_submenu(
 async def get_submenu(
     menu_id: int,
     submenu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Removing a specific submenu.
@@ -81,10 +85,7 @@ async def get_submenu(
     Deleting a submenu will delete all of its dishes.
     """
 
-    return await _control.get_submenu(
-        menu_id=menu_id,
-        id=submenu_id,
-    )
+    return await _control.get_submenu(menu_id=menu_id, id=submenu_id, db=db)
 
 
 @router.patch(
@@ -96,6 +97,7 @@ async def update_submenu(
     data: SubMenu_Data,
     menu_id: int,
     submenu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Update a specific submenu.
@@ -106,7 +108,5 @@ async def update_submenu(
     """
 
     return await _control.update_submenu(
-        data=data,
-        menu_id=menu_id,
-        id=submenu_id,
+        data=data, menu_id=menu_id, id=submenu_id, db=db
     )

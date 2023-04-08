@@ -6,8 +6,7 @@ from typing import Generator
 import httpx
 import pytest
 import pytest_asyncio
-
-from database import connect
+from database.models import create_tables
 from main import app
 
 from .vars import Variables as var
@@ -16,12 +15,12 @@ pytestmark = pytest.mark.asyncio
 
 
 # Create tables
-connect.Base.metadata.create_all(bind=connect.engine)
+asyncio.run(create_tables())
 
 
 @pytest.fixture(scope="session")
 def event_loop() -> Generator:
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+    loop = asyncio.new_event_loop()
     yield loop
     loop.close()
 

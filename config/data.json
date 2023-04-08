@@ -22,7 +22,7 @@
             "title": "DISH 1",
             "description": "DESCRIPTION OF DISH 1",
             "submenu_id": 1,
-            "price": 16.5
+            "price": "16.5"
         }
     },
     {
@@ -31,7 +31,7 @@
             "title": "DISH 2",
             "description": "DESCRIPTION OF DISH 2",
             "submenu_id": 1,
-            "price": 8.5
+            "price": "8.5"
         }
     },
     {
@@ -40,7 +40,7 @@
             "title": "DISH 3",
             "description": "DESCRIPTION OF DISH 3",
             "submenu_id": 1,
-            "price": 18
+            "price": "18"
         }
     },
     {
@@ -58,7 +58,7 @@
             "title": "DRINK 1",
             "description": "DESCRIPTION OF DRINK 1",
             "submenu_id": 2,
-            "price": 3.5
+            "price": "3.5"
         }
     },
     {
@@ -67,7 +67,7 @@
             "title": "DRINK 2",
             "description": "DESCRIPTION OF DRINK 2",
             "submenu_id": 2,
-            "price": 5.5
+            "price": "5.5"
         }
     },
     {
@@ -76,7 +76,7 @@
             "title": "DRINK 3",
             "description": "DESCRIPTION OF DRINK 3",
             "submenu_id": 2,
-            "price": 6.5
+            "price": "6.5"
         }
     },
     {
@@ -103,7 +103,7 @@
             "title": "DISH 1",
             "description": "DESCRIPTION OF DISH 1",
             "submenu_id": 3,
-            "price": 11
+            "price": "11"
         }
     },
     {
@@ -112,7 +112,7 @@
             "title": "DISH 2",
             "description": "DESCRIPTION OF DISH 2",
             "submenu_id": 3,
-            "price": 11
+            "price": "11"
         }
     },
     {
@@ -121,7 +121,7 @@
             "title": "DISH 3",
             "description": "DESCRIPTION OF DISH 3",
             "submenu_id": 3,
-            "price": 11
+            "price": "11"
         }
     },
     {
@@ -139,7 +139,7 @@
             "title": "DISH 1",
             "description": "DESCRIPTION OF DISH 1",
             "submenu_id": 4,
-            "price": 34
+            "price": "34"
         }
     },
     {
@@ -148,7 +148,7 @@
             "title": "DISH 2",
             "description": "DESCRIPTION OF DISH 2",
             "submenu_id": 4,
-            "price": 43
+            "price": "43"
         }
     },
     {
@@ -157,7 +157,7 @@
             "title": "DISH 3",
             "description": "DESCRIPTION OF DISH 3",
             "submenu_id": 4,
-            "price": 12
+            "price": "12"
         }
     }
 ]

@@ -1,27 +1,38 @@
 import fastapi as _fastapi
 
-import database.connect as table
+import database.models as table
 from caching import functions as cache
-from database.connect import db
 from models.dish import Dish, Dish_Data, Dish_Delete
 from models.menu import Menu
 from models.submenu import SubMenu
+from sqlalchemy.ext.asyncio import AsyncSession
+import sqlalchemy as _sql
 
 
-async def get_dishes(submenu_id: int):
-    res = db.query(table.Dish).filter_by(submenu_id=submenu_id)
-    return list(map(Dish.from_orm, res))
+async def get_dishes(
+    submenu_id: int,
+    db: AsyncSession,
+):
+    res = await db.execute(_sql.select(table.Dish).filter_by(submenu_id=submenu_id))
+    return list(map(Dish.from_orm, res.scalars().all()))
 
 
-async def create_dish(data: Dish_Data, menu_id: int, submenu_id: int):
+async def create_dish(
+    data: Dish_Data,
+    menu_id: int,
+    submenu_id: int,
+    db: AsyncSession,
+):
     try:
-        submenu = db.query(table.SubMenu).filter_by(id=submenu_id).one()
+        submenu = await db.execute(_sql.select(table.SubMenu).filter_by(id=submenu_id))
+        submenu = submenu.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
             status_code=404, detail=f"submenu {submenu_id} not found"
         )
     try:
-        menu = db.query(table.Menu).filter_by(id=menu_id).one()
+        menu = await db.execute(_sql.select(table.Menu).filter_by(id=menu_id))
+        menu = menu.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
             status_code=404, detail=f"menu {menu_id} not found"
@@ -31,7 +42,7 @@ async def create_dish(data: Dish_Data, menu_id: int, submenu_id: int):
     dish = table.Dish(**data.dict())
     dish.submenu_id = submenu_id
     db.add(dish)
-    db.commit()
+    await db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
     await cache.set(
         key_name,
@@ -44,30 +55,38 @@ async def create_dish(data: Dish_Data, menu_id: int, submenu_id: int):
     return Dish.from_orm(dish)
 
 
-async def delete_dish(menu_id: int, submenu_id: int, id: int):
+async def delete_dish(
+    menu_id: int,
+    submenu_id: int,
+    id: int,
+    db: AsyncSession,
+):
     try:
-        dish = db.query(table.Dish).filter_by(id=id).one()
+        dish = await db.execute(_sql.select(table.Dish).filter_by(id=id))
+        dish = dish.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
             status_code=404,
             detail=f"dish {id} not found",
         )
     try:
-        submenu = db.query(table.SubMenu).filter_by(id=submenu_id).one()
+        submenu = await db.execute(_sql.select(table.SubMenu).filter_by(id=submenu_id))
+        submenu = submenu.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
             status_code=404, detail=f"submenu {submenu_id} not found"
         )
     try:
-        menu = db.query(table.Menu).filter_by(id=menu_id).one()
+        menu = await db.execute(_sql.select(table.Menu).filter_by(id=menu_id))
+        menu = menu.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
             status_code=404, detail=f"menu {menu_id} not found"
         )
     submenu.dishes_count -= 1
     menu.dishes_count -= 1
-    db.delete(dish)
-    db.commit()
+    await db.delete(dish)
+    await db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{dish.id}"
     await cache.delete(key_name)
     await cache.set(f"Menu_{menu_id}", Menu.from_orm(menu).dict())
@@ -80,14 +99,19 @@ async def delete_dish(menu_id: int, submenu_id: int, id: int):
     return Dish_Delete.from_orm(response)
 
 
-async def get_dish(menu_id: int, submenu_id: int, id: int):
+async def get_dish(
+    menu_id: int,
+    submenu_id: int,
+    id: int,
+    db: AsyncSession,
+):
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
     dish = await cache.get(key_name)
     if dish:
         return dish
     try:
-        dish = (
-            db.query(table.Dish)
+        dish = await db.execute(
+            _sql.select(table.Dish)
             .join(table.SubMenu)
             .join(table.Menu)
             .filter(
@@ -95,8 +119,8 @@ async def get_dish(menu_id: int, submenu_id: int, id: int):
                 table.Dish.id == id,
                 table.Dish.submenu_id == submenu_id,
             )
-            .one()
         )
+        dish = dish.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
             status_code=404,
@@ -108,15 +132,25 @@ async def get_dish(menu_id: int, submenu_id: int, id: int):
     return dish
 
 
-async def update_dish(data: Dish_Data, menu_id: int, submenu_id: int, id: int):
+async def update_dish(
+    data: Dish_Data,
+    menu_id: int,
+    submenu_id: int,
+    id: int,
+    db: AsyncSession,
+):
     data = data.dict(exclude_unset=True)
-    res = db.query(table.Dish).filter_by(id=id).update(data)
-    db.commit()
-    if not res:
+    dish = await db.execute(_sql.select(table.Dish).filter_by(id=id))
+    try:
+        dish = dish.scalars().one()
+    except Exception:
         raise _fastapi.HTTPException(
             status_code=404,
             detail=f"dish {id} not found",
         )
+    for key, value in data.items():
+        setattr(dish, key, value)
+    await db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
     res = await cache.get(key_name)
     if res:

@@ -4,11 +4,18 @@ import fastapi as _fastapi
 
 import config.description as descr
 from endpoints import dish, menu, submenu, task
+from database.models import create_tables
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
     description=descr.description,
 )
+
+
+@app.on_event("startup")
+async def startup_event():
+    await create_tables()
+
 
 app.include_router(
     task.router,

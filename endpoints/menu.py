@@ -1,7 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 import control.menu as _control
 from models.menu import Menu, Menu_Data, Menu_Delete
+from sqlalchemy.ext.asyncio import AsyncSession
+from database.connect import session
+
 
 router = APIRouter()
 
@@ -11,12 +14,16 @@ router = APIRouter()
     response_model=list[Menu],
     summary="Get menu list",
 )
-async def get_menus():
+async def get_menus(
+    db: AsyncSession = Depends(session),
+):
     """
     Getting a menu list.
     """
 
-    return await _control.get_menus()
+    return await _control.get_menus(
+        db=db,
+    )
 
 
 @router.post(
@@ -27,12 +34,16 @@ async def get_menus():
 )
 async def create_menu(
     data: Menu_Data,
+    db: AsyncSession = Depends(session),
 ):
     """
     Menu creation. 'title' - menu title, 'description' - menu description.
     """
 
-    return await _control.create_menu(data=data)
+    return await _control.create_menu(
+        data=data,
+        db=db,
+    )
 
 
 @router.delete(
@@ -42,13 +53,17 @@ async def create_menu(
 )
 async def delete_menu(
     menu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Removing a menu. 'menu_id' - id in the 'menu' table.
     Deleting a menu will delete all submenus and dishes associated with it.
     """
 
-    return await _control.delete_menu(id=menu_id)
+    return await _control.delete_menu(
+        id=menu_id,
+        db=db,
+    )
 
 
 @router.get(
@@ -58,6 +73,7 @@ async def delete_menu(
 )
 async def get_menu(
     menu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Get a specific menu. 'menu_id' - menu id in table 'menu'.
@@ -65,6 +81,7 @@ async def get_menu(
 
     return await _control.get_menu(
         id=menu_id,
+        db=db,
     )
 
 
@@ -76,6 +93,7 @@ async def get_menu(
 async def update_menu(
     data: Menu_Data,
     menu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Update a specific menu.
@@ -83,7 +101,4 @@ async def update_menu(
     'title' - menu title, 'description' - menu description.
     """
 
-    return await _control.update_menu(
-        data=data,
-        id=menu_id,
-    )
+    return await _control.update_menu(data=data, id=menu_id, db=db)

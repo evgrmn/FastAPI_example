@@ -4,16 +4,18 @@ import os.path
 import fastapi as _fastapi
 from celery.result import AsyncResult
 from fastapi.responses import FileResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.connect import Dish, Menu, SubMenu, create_tables, db, drop_tables
+from database.models import Dish, Menu, SubMenu, create_tables, drop_tables
 from models.task import Fill, Result, Task
 from queues.task import download_database
 
 
-async def fill_database():
-    db.close()
-    drop_tables()
-    create_tables()
+async def fill_database(
+    db: AsyncSession,
+):
+    await drop_tables()
+    await create_tables()
     model_dict = {"dish": Dish, "submenu": SubMenu, "menu": Menu}
     try:
         with open("config/data.json") as f:
@@ -26,9 +28,7 @@ async def fill_database():
     for el in menu_data:
         data = model_dict[el["model"]](**el["data"])
         db.add(data)
-        db.commit()
-        db.refresh(data)
-    db.close()
+        await db.commit()
     response = Fill
     response.result = "Database filled with data"
 

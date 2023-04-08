@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 import control.dish as _control
 from models.dish import Dish, Dish_Data, Dish_Delete
+from sqlalchemy.ext.asyncio import AsyncSession
+from database.connect import session
 
 router = APIRouter()
 
@@ -14,6 +16,7 @@ router = APIRouter()
 async def get_dishes(
     menu_id: int,
     submenu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Getting a list of dishes.
@@ -21,9 +24,7 @@ async def get_dishes(
     'submenu_id' - submenu id of this dish.
     """
 
-    return await _control.get_dishes(
-        submenu_id=submenu_id,
-    )
+    return await _control.get_dishes(submenu_id=submenu_id, db=db)
 
 
 @router.post(
@@ -36,6 +37,7 @@ async def create_dish(
     data: Dish_Data,
     menu_id: int,
     submenu_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Creating a new dish
@@ -48,9 +50,7 @@ async def create_dish(
     """
 
     return await _control.create_dish(
-        data=data,
-        menu_id=menu_id,
-        submenu_id=submenu_id,
+        data=data, menu_id=menu_id, submenu_id=submenu_id, db=db
     )
 
 
@@ -63,6 +63,7 @@ async def delete_dish(
     menu_id: int,
     submenu_id: int,
     dish_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Removing a specific dish.
@@ -73,9 +74,7 @@ async def delete_dish(
     """
 
     return await _control.delete_dish(
-        menu_id=menu_id,
-        submenu_id=submenu_id,
-        id=dish_id,
+        menu_id=menu_id, submenu_id=submenu_id, id=dish_id, db=db
     )
 
 
@@ -88,6 +87,7 @@ async def get_dish(
     menu_id: int,
     submenu_id: int,
     dish_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Getting a certain meal.
@@ -98,9 +98,7 @@ async def get_dish(
     """
 
     return await _control.get_dish(
-        menu_id=menu_id,
-        submenu_id=submenu_id,
-        id=dish_id,
+        menu_id=menu_id, submenu_id=submenu_id, id=dish_id, db=db
     )
 
 
@@ -114,6 +112,7 @@ async def update_dish(
     menu_id: int,
     submenu_id: int,
     dish_id: int,
+    db: AsyncSession = Depends(session),
 ):
     """
     Updating a particular dish.
@@ -126,8 +125,5 @@ async def update_dish(
     """
 
     return await _control.update_dish(
-        data=data,
-        menu_id=menu_id,
-        submenu_id=submenu_id,
-        id=dish_id,
+        data=data, menu_id=menu_id, submenu_id=submenu_id, id=dish_id, db=db
     )
