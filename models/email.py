@@ -10,7 +10,7 @@ class Main(BaseModel):
 
 
 class Email(Main):
-    address_from: str = Env.SMTP_EMAIL_ADDRESS
+    address_from: str | None = Env.SMTP_EMAIL_ADDRESS
     address_to: str
     subject: str
     content: str

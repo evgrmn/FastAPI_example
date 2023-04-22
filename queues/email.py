@@ -10,7 +10,7 @@ loop = asyncio.get_event_loop()
 
 async def send_email_func(data: dict):
     SMTP_USER = data["address_from"]
-    SMTP_PASSWORD = Env.SMTP_PASSWORD
+    SMTP_PASSWORD = str(Env.SMTP_PASSWORD)
     SMTP_TO = data["address_to"]
     email = EmailMessage()
     email["Subject"] = "This is an auto submit from FastAPI_example"
