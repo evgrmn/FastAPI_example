@@ -4,7 +4,7 @@ celery_app = Celery(
     "worker",
     broker="pyamqp://guest:guest@rabbit:5672//",
     backend="rpc://",
-    include=["queues.task"],
+    include=["queues.task", "queues.email"],
 )
 
 if __name__ == "__main__":

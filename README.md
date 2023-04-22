@@ -21,7 +21,8 @@ Peculiarities:
 - ORM SQLAlchemy
 - Pydantic data validation
 - Pytest testing
-- Celery background task
+- Celery background tasks
+- Sending emails using gmail.com
 
 ## Creating containers and running the application:
 

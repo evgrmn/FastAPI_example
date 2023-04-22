@@ -12,13 +12,13 @@ router = APIRouter()
     "/task/fill",
     response_model=Fill,
     status_code=201,
-    summary="Fill database with test data",
+    summary="Fill database with sample data",
 )
 async def fill_database(
     db: AsyncSession = Depends(session),
 ):
     """
-    Filling the database with test data from the config/data.json file.
+    Filling the database with sample data from the config/data.json file.
     """
 
     return await _control.fill_database(db=db)
@@ -28,7 +28,7 @@ async def fill_database(
     "/task/send",
     response_model=Task,
     status_code=201,
-    summary="Save database data in excel file",
+    summary="Save database data in Excel file",
 )
 async def send_task():
     """
@@ -39,7 +39,7 @@ async def send_task():
 
 
 @router.get(
-    "/result/task/{task_id}",
+    "/task/result/{task_id}",
     response_model=Result,
     status_code=200,
     summary="Get database as excel file",
@@ -50,3 +50,4 @@ async def task_result(task_id: str):
     """
 
     return await _control.task_result(task_id=task_id)
+

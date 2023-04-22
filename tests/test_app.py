@@ -6,7 +6,7 @@ from typing import Generator
 import httpx
 import pytest
 import pytest_asyncio
-from database.models import create_tables
+from database.models import create_tables, drop_tables
 from main import app
 
 from .vars import Variables as var
@@ -15,6 +15,7 @@ pytestmark = pytest.mark.asyncio
 
 
 # Create tables
+asyncio.run(drop_tables())
 asyncio.run(create_tables())
 
 
