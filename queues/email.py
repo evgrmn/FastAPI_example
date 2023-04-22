@@ -9,21 +9,21 @@ loop = asyncio.get_event_loop()
 
 
 async def send_email_func(data: dict):
-    SMTP_USER=data['address_from']
-    SMTP_PASSWORD=Env.SMTP_PASSWORD
-    SMTP_TO=data['address_to']
+    SMTP_USER = data["address_from"]
+    SMTP_PASSWORD = Env.SMTP_PASSWORD
+    SMTP_TO = data["address_to"]
     email = EmailMessage()
-    email['Subject'] = 'This is an auto submit from FastAPI_example'
-    email['From'] = SMTP_USER
-    email['To'] = SMTP_TO
-    email.set_content('Do not reply')
+    email["Subject"] = "This is an auto submit from FastAPI_example"
+    email["From"] = SMTP_USER
+    email["To"] = SMTP_TO
+    email.set_content("Do not reply")
     SMTP_HOST = "smtp.gmail.com"
     SMTP_PORT = 465
     with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT) as server:
         server.login(SMTP_USER, SMTP_PASSWORD)
         server.send_message(email)
 
-    return 'Email sent!'
+    return "Email sent!"
 
 
 @celery_app.task

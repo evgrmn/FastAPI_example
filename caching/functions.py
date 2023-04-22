@@ -31,6 +31,6 @@ async def get(name):
 
 
 async def keys(find):
-    key_list = await redis.keys(f'{find}*')
+    key_list = await redis.keys(f"{find}*")
 
     return key_list

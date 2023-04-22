@@ -50,4 +50,3 @@ async def task_result(task_id: str):
     """
 
     return await _control.task_result(task_id=task_id)
-
