@@ -1,6 +1,8 @@
 import sqlalchemy as _sql
 import sqlalchemy.orm as _orm
 from database.connect import Base, engine
+from datetime import datetime
+import passlib.hash as _hash
 
 
 class Menu(Base):
@@ -40,6 +42,17 @@ class Dish(Base):
     description = _sql.Column(_sql.String, index=True)
     submenu_id = _sql.Column(_sql.Integer, _sql.ForeignKey("submenu.id"))
     price = _sql.Column(_sql.String, index=True)
+
+
+class User(Base):
+    __tablename__ = "users"
+    id = _sql.Column(_sql.Integer, primary_key=True, index=True)
+    email = _sql.Column(_sql.String, unique=True, index=True)
+    hashed_password = _sql.Column(_sql.String)
+    date_created = _sql.Column(_sql.DateTime, default=datetime.utcnow)
+
+    def verify_password(self, password: str):
+        return _hash.bcrypt.verify(password, self.hashed_password)
 
 
 async def drop_tables():
