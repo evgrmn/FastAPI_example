@@ -1,6 +1,6 @@
 # FastAPI_example
 
-![](https://badgen.net/badge/Python/3.10/blue) ![](https://badgen.net/badge/FastAPI/0.89.1/gray) ![](https://badgen.net/badge/SQLAlchemy/2.0.8/red) ![](https://badgen.net/badge/Pytest/7.2.1/blue) ![](https://badgen.net/badge/Redis/latest/green) ![](https://badgen.net/badge/Postgresql/15.1/blue?icon=postgresql) ![](https://badgen.net/badge/Pydantic/1.10.4/gray) ![](https://badgen.net/badge/RabbitMQ/3.10.7/orange)
+![](https://badgen.net/badge/Python/3.10/blue) ![](https://badgen.net/badge/FastAPI/0.89.1/gray) ![](https://badgen.net/badge/SQLAlchemy/2.0.8/red) ![](https://badgen.net/badge/Pytest/7.2.1/blue) ![](https://badgen.net/badge/Redis/latest/green) ![](https://badgen.net/badge/Postgresql/15.1/blue?icon=postgresql) ![](https://badgen.net/badge/Pydantic/1.10.4/gray) ![](https://badgen.net/badge/RabbitMQ/3.10.7/orange) ![](https://badgen.net/badge/PyJWT/2.6.0/blue)
 
 ## Restaurant menu
 
