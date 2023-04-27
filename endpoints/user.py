@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 import fastapi as _fastapi
 
 import control.user as _control
-from models.user import User, UserCreate
+from models.user import User, UserCreate, Token
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
 import fastapi.security as _security
@@ -39,11 +39,19 @@ async def create_user(user: UserCreate,  db: AsyncSession = Depends(session),):
     return await _control.create_user(user=user, db=db)
 
 
-@router.post("/token")
+@router.post(
+    "/token", 
+    response_model=Token, 
+    status_code=200,
+    summary="Generate_token",
+)
 async def generate_token(
     form_data: _security.OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(session),
 ):
+    """
+    User authorization request form
+    """
     user = await _control.authenticate_user(
         email=form_data.username, password=form_data.password, db=db
     )

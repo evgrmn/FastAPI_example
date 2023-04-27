@@ -20,3 +20,8 @@ class User(Main):
 class UserCreate(Main):
     email: str
     password: str
+
+
+class Token(Main):
+    access_token: str
+    token_type: str

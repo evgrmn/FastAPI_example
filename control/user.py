@@ -17,9 +17,20 @@ oath2schema = _security.OAuth2PasswordBearer("/api/v1/user/token")
 
 
 async def get_users(db: AsyncSession):
-    res = await db.execute(_sql.select(table.User))
+    key_name = f"User_list"
+    user_list = await cache.get(key_name)
+    if user_list:
+        user_list = list(map(lambda x: x, user_list.values()))
+        return user_list
+    user_list = await db.execute(_sql.select(table.User))
+    user_list = list(map(User.from_orm, user_list.scalars().all()))
+    user_dict = {}
+    for n, user in enumerate(user_list):
+        user_dict[n] = user.dict()
+        user_dict[n]['date_created'] = user_dict[n]['date_created'].strftime("%Y-%m-%dT%H:%M:%S.%f")
+    await cache.set(key_name, user_dict)
 
-    return list(map(User.from_orm, res.scalars().all()))
+    return user_list
 
 
 async def create_user(user: UserCreate, db: AsyncSession):
@@ -39,6 +50,7 @@ async def create_user(user: UserCreate, db: AsyncSession):
         user_obj = table.User(email=email, hashed_password=hashed_password)
         db.add(user_obj)
         await db.commit()
+        await cache.delete("User_list")
         return user_obj
     else:
         raise _fastapi.HTTPException(

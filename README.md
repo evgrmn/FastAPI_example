@@ -23,6 +23,7 @@ Peculiarities:
 - Pytest testing
 - Celery background tasks
 - Sending emails using gmail.com
+- JSON Web Tokens (JWT)
 
 ## Creating containers and running the application:
 
