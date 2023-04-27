@@ -3,7 +3,7 @@ import fastapi as _fastapi
 import fastapi.security as _security
 import database.models as table
 from caching import functions as cache
-from models.user import User, UserCreate
+from models.user import User, UserCreate, User_Delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
 import sqlalchemy as _sql
@@ -12,7 +12,7 @@ import passlib.hash as _hash
 import jwt as _jwt
 
 
-_JWT_SECRET = "donotthinkaboutit7"
+_JWT_SECRET = "donotthinkaboutit"
 oath2schema = _security.OAuth2PasswordBearer("/api/v1/user/token")
 
 
@@ -66,20 +66,23 @@ async def get_current_user(
     db: AsyncSession = _fastapi.Depends(session),
     token: str = _fastapi.Depends(oath2schema),
 ):
-    try:        
-        payload = _jwt.decode(token, _JWT_SECRET, algorithms=["HS256"])
-        print(payload)
-        current_user = await cache.get(f"User_{payload['id']}")
-        if current_user:
-            print('------- current_user --------', current_user)
-            return current_user
-        user = await db.execute(_sql.select(table.User).filter_by(id=payload["id"]))
-        user = user.scalars().one()
+    payload = _jwt.decode(token, _JWT_SECRET, algorithms=["HS256"])
+    current_user = await cache.get(f"User_{payload['id']}")
+    if current_user:
+        return current_user
+    try:
+        current_user = await db.execute(_sql.select(table.User).filter_by(id=payload["id"]))
+        current_user = current_user.scalars().one()
     except:
         raise _fastapi.HTTPException(
             status_code=401, detail="Invalid email or password"
         )
-    return User.from_orm(user)
+    user_dict = current_user.__dict__
+    user_dict['date_created'] = user_dict['date_created'].strftime("%Y-%m-%dT%H:%M:%S.%f")
+    del user_dict['_sa_instance_state']
+    await cache.set(f"User_{current_user.id}", user_dict)
+
+    return User.from_orm(current_user)
 
 
 async def get_user_by_email(email: str, db: AsyncSession):
@@ -111,3 +114,22 @@ async def create_token(user: table.User):
     token = _jwt.encode(user_dict, _JWT_SECRET)
 
     return dict(access_token=token, token_type="bearer")
+
+
+async def delete_user(
+    id: int,
+    db: AsyncSession,
+):
+    try:
+        user = await db.execute(_sql.select(table.User).filter_by(id=id))
+        await db.delete(user.scalars().one())
+        await db.commit()
+    except Exception:
+        raise _fastapi.HTTPException(status_code=404, detail="user not found")
+    await cache.delete_cascade(f"*User_{id}*")
+    response = User_Delete
+    response.status = True
+    response.message = "The user has been deleted"
+    await cache.delete("User_list")
+
+    return User_Delete.from_orm(response)

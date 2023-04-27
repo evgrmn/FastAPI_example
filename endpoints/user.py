@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 import fastapi as _fastapi
 
 import control.user as _control
-from models.user import User, UserCreate, Token
+from models.user import User, UserCreate, Token, User_Delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
 import fastapi.security as _security
@@ -72,3 +72,23 @@ async def get_user(user: User = Depends(_control.get_current_user),):
     """
 
     return user
+
+
+@router.delete(
+    "/{menu_id}",
+    response_model=User_Delete,
+    status_code=200,
+    summary="Delete user",
+)
+async def delete_user(
+    user_id: int,
+    db: AsyncSession = Depends(session),
+):
+    """
+    Delete user
+    """
+
+    return await _control.delete_user(
+        id=user_id,
+        db=db,
+    )

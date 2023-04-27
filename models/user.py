@@ -25,3 +25,8 @@ class UserCreate(Main):
 class Token(Main):
     access_token: str
     token_type: str
+
+
+class User_Delete(Main):
+    status: bool
+    message: str
