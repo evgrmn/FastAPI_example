@@ -10,11 +10,23 @@ import sqlalchemy as _sql
 
 
 async def get_dishes(
+    menu_id: int,
     submenu_id: int,
     db: AsyncSession,
 ):
-    res = await db.execute(_sql.select(table.Dish).filter_by(submenu_id=submenu_id))
-    return list(map(Dish.from_orm, res.scalars().all()))
+    key_name = f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}"
+    dish_list = await cache.get(key_name)
+    if dish_list:
+        dish_list = list(map(lambda x: x, dish_list.values()))
+        return dish_list
+    dish_list = await db.execute(_sql.select(table.Dish).filter_by(submenu_id=submenu_id))
+    dish_list = list(map(Dish.from_orm, dish_list.scalars().all()))
+    dish_dict = {}
+    for n, dish in enumerate(dish_list):
+        dish_dict[n] = dish.dict()
+    await cache.set(key_name, dish_dict)
+
+    return dish_list
 
 
 async def create_dish(
@@ -51,6 +63,7 @@ async def create_dish(
     await cache.set(f"Menu_{menu_id}", Menu.from_orm(menu).dict())
     update_data = SubMenu.from_orm(submenu).dict()
     await cache.set(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
+    await cache.delete(f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}")
 
     return Dish.from_orm(dish)
 
@@ -95,6 +108,7 @@ async def delete_dish(
     response = Dish_Delete
     response.status = True
     response.message = f"The dish {id} has been deleted"
+    await cache.delete(f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}")
 
     return Dish_Delete.from_orm(response)
 
@@ -156,5 +170,6 @@ async def update_dish(
     if res:
         res.update(data)
         await cache.set(key_name, res)
+    await cache.delete(f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}")
 
     return data

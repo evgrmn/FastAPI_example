@@ -51,6 +51,10 @@ async def create_user(user: UserCreate, db: AsyncSession):
         db.add(user_obj)
         await db.commit()
         await cache.delete("User_list")
+        user_dict = user_obj.__dict__
+        user_dict['date_created'] = user_dict['date_created'].strftime("%Y-%m-%dT%H:%M:%S.%f")
+        del user_dict['_sa_instance_state']
+        await cache.set(f"User_{user_obj.id}", user_obj.__dict__)
         return user_obj
     else:
         raise _fastapi.HTTPException(
@@ -65,6 +69,10 @@ async def get_current_user(
     try:        
         payload = _jwt.decode(token, _JWT_SECRET, algorithms=["HS256"])
         print(payload)
+        current_user = await cache.get(f"User_{payload['id']}")
+        if current_user:
+            print('------- current_user --------', current_user)
+            return current_user
         user = await db.execute(_sql.select(table.User).filter_by(id=payload["id"]))
         user = user.scalars().one()
     except:

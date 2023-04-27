@@ -12,8 +12,19 @@ async def get_submenus(
     menu_id: int,
     db: AsyncSession,
 ):
-    res = await db.execute(_sql.select(table.SubMenu).filter_by(menu_id=menu_id))
-    return list(map(SubMenu.from_orm, res.scalars().all()))
+    key_name = f"SubMenu_list_Menu_{menu_id}"
+    submenu_list = await cache.get(key_name)
+    if submenu_list:
+        submenu_list = list(map(lambda x: x, submenu_list.values()))
+        return submenu_list
+    submenu_list = await db.execute(_sql.select(table.SubMenu).filter_by(menu_id=menu_id))
+    submenu_list = list(map(SubMenu.from_orm, submenu_list.scalars().all()))
+    submenu_dict = {}
+    for n, submenu in enumerate(submenu_list):
+        submenu_dict[n] = submenu.dict()
+    await cache.set(key_name, submenu_dict)
+
+    return submenu_list
 
 
 async def create_submenu(
@@ -39,6 +50,7 @@ async def create_submenu(
         SubMenu.from_orm(submenu).dict(),
     )
     await cache.set(f"Menu_{menu_id}", Menu.from_orm(menu).dict())
+    await cache.delete(f"SubMenu_list_Menu_id_{menu_id}")
 
     return SubMenu.from_orm(submenu)
 
@@ -76,6 +88,7 @@ async def delete_submenu(
     response = SubMenu_Delete
     response.status = True
     response.message = f"The submenu {id} has been deleted"
+    await cache.delete(f"SubMenu_list_Menu_{menu_id}")
 
     return SubMenu_Delete.from_orm(response)
 
@@ -133,5 +146,6 @@ async def update_submenu(
     if res:
         res.update(data)
         await cache.set(key_name, res)
+    await cache.delete(f"SubMenu_list_Menu_{menu_id}")
 
     return data

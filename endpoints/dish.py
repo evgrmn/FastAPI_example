@@ -24,7 +24,7 @@ async def get_dishes(
     'submenu_id' - submenu id of this dish.
     """
 
-    return await _control.get_dishes(submenu_id=submenu_id, db=db)
+    return await _control.get_dishes(menu_id=menu_id, submenu_id=submenu_id, db=db)
 
 
 @router.post(
