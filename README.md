@@ -16,7 +16,7 @@ Description:
 
 Peculiarities:
 
-- Uses Docker containerization
+- Docker containerization
 - Redis caching
 - ORM SQLAlchemy
 - Pydantic data validation
