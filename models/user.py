@@ -10,7 +10,6 @@ class Main(BaseModel):
 
 
 class User(Main):
-    __tablename__ = "users"
     id: int
     email: str
     hashed_password: str
@@ -30,3 +29,8 @@ class Token(Main):
 class User_Delete(Main):
     status: bool
     message: str
+
+
+class User_Data(Main):
+    email: str
+    hashed_password: str

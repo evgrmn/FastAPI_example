@@ -141,11 +141,9 @@ async def update_submenu(
     for key, value in data.items():
         setattr(submenu, key, value)
     await db.commit()
-    key_name = f"Menu_{menu_id}_SubMenu_{id}"
-    res = await cache.get(key_name)
-    if res:
-        res.update(data)
-        await cache.set(key_name, res)
+    submenu_dict = submenu.__dict__
+    del submenu_dict['_sa_instance_state']
+    await cache.set(f"Menu_{menu_id}_SubMenu_{id}", submenu_dict)
     await cache.delete(f"SubMenu_list_Menu_{menu_id}")
 
     return data

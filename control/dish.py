@@ -166,10 +166,9 @@ async def update_dish(
         setattr(dish, key, value)
     await db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
-    res = await cache.get(key_name)
-    if res:
-        res.update(data)
-        await cache.set(key_name, res)
+    dish_dict = dish.__dict__
+    del dish_dict['_sa_instance_state']
+    await cache.set(key_name, dish_dict)
     await cache.delete(f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}")
 
     return data

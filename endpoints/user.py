@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 import fastapi as _fastapi
 
 import control.user as _control
-from models.user import User, UserCreate, Token, User_Delete
+from models.user import User, UserCreate, Token, User_Delete, User_Data
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
 import fastapi.security as _security
@@ -92,3 +92,23 @@ async def delete_user(
         id=user_id,
         db=db,
     )
+
+
+@router.patch(
+    "/{user_id}",
+    response_model=User_Data,
+    status_code=200,
+    summary="Update user",
+)
+async def update_user(
+    data: User_Data,
+    user_id: int,
+    db: AsyncSession = Depends(session),
+):
+    """
+    Update a specific user.
+    'user_id' - id in the 'user' table,
+    'title' - menu title, 'description' - menu description.
+    """
+
+    return await _control.update_user(data=data, id=user_id, db=db)

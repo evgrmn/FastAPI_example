@@ -3,7 +3,7 @@ import fastapi as _fastapi
 import fastapi.security as _security
 import database.models as table
 from caching import functions as cache
-from models.user import User, UserCreate, User_Delete
+from models.user import User, UserCreate, User_Delete, User_Data
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
 import sqlalchemy as _sql
@@ -47,15 +47,16 @@ async def create_user(user: UserCreate, db: AsyncSession):
                 status_code=404, detail="Please enter a valid email"
             )        
         hashed_password = _hash.bcrypt.hash(user.password)        
-        user_obj = table.User(email=email, hashed_password=hashed_password)
-        db.add(user_obj)
+        user = table.User(email=email, hashed_password=hashed_password)
+        db.add(user)
         await db.commit()
         await cache.delete("User_list")
-        user_dict = user_obj.__dict__
+        user_dict = user.__dict__
         user_dict['date_created'] = user_dict['date_created'].strftime("%Y-%m-%dT%H:%M:%S.%f")
         del user_dict['_sa_instance_state']
-        await cache.set(f"User_{user_obj.id}", user_obj.__dict__)
-        return user_obj
+        await cache.set(f"User_{user.id}", user_dict)
+
+        return user
     else:
         raise _fastapi.HTTPException(
             status_code=400, detail="User with that email already exists"
@@ -133,3 +134,37 @@ async def delete_user(
     await cache.delete("User_list")
 
     return User_Delete.from_orm(response)
+
+
+
+async def update_user(
+    data: User_Data,
+    id: int,
+    db: AsyncSession,
+): 
+    try:
+        user = await db.execute(_sql.select(table.User).filter_by(id=id))
+        user = user.scalars().one()
+    except Exception:
+        raise _fastapi.HTTPException(
+            status_code=404,
+            detail=f"user {id} not found",
+        )
+    # check that email is valid
+    try:            
+        _email_check.validate_email(email=data.email)
+    except _email_check.EmailNotValidError:
+        raise _fastapi.HTTPException(
+            status_code=404, detail="Please enter a valid email"
+        )   
+    data = data.dict(exclude_unset=True)
+    for key, value in data.items():
+        setattr(user, key, value)
+    await db.commit()
+    user_dict = user.__dict__
+    user_dict['date_created'] = user_dict['date_created'].strftime("%Y-%m-%dT%H:%M:%S.%f")
+    del user_dict['_sa_instance_state']
+    await cache.set(f"User_{id}", user_dict)
+    await cache.delete("User_list")
+
+    return data

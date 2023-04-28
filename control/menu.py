@@ -95,10 +95,9 @@ async def update_menu(
     for key, value in data.items():
         setattr(menu, key, value)
     await db.commit()
-    key_name = f"Menu_{id}"
-    res = await cache.get(key_name)
-    if res:
-        await cache.set(key_name, res.update(data))
+    menu_dict = menu.__dict__
+    del menu_dict['_sa_instance_state']
+    await cache.set(f"Menu_{id}", menu_dict)
     await cache.delete("Menu_list")
 
     return data
