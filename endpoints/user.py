@@ -17,7 +17,9 @@ router = APIRouter()
     status_code=200,
     summary="A list of users",
 )
-async def get_users(db: AsyncSession = Depends(session),):
+async def get_users(
+    db: AsyncSession = Depends(session),
+):
     """
     Get a list of all registered users
     """
@@ -31,7 +33,10 @@ async def get_users(db: AsyncSession = Depends(session),):
     status_code=201,
     summary="Create a new user",
 )
-async def create_user(user: UserCreate,  db: AsyncSession = Depends(session),):
+async def create_user(
+    user: UserCreate,
+    db: AsyncSession = Depends(session),
+):
     """
     Create a new user using JWT authentication
     """
@@ -40,8 +45,8 @@ async def create_user(user: UserCreate,  db: AsyncSession = Depends(session),):
 
 
 @router.post(
-    "/token", 
-    response_model=Token, 
+    "/token",
+    response_model=Token,
     status_code=200,
     summary="Generate_token",
 )
@@ -62,11 +67,14 @@ async def generate_token(
 
 
 @router.get(
-    "/me", 
-    response_model=User, 
-    status_code=200, 
-    summary="Get current user",)
-async def get_user(user: User = Depends(_control.get_current_user),):
+    "/me",
+    response_model=User,
+    status_code=200,
+    summary="Get current user",
+)
+async def get_user(
+    user: User = Depends(_control.get_current_user),
+):
     """
     Get information about current user
     """

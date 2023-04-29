@@ -17,14 +17,13 @@ async def get_dishes(
     key_name = f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}"
     dish_list = await cache.get(key_name)
     if dish_list:
-        dish_list = list(map(lambda x: x, dish_list.values()))
         return dish_list
-    dish_list = await db.execute(_sql.select(table.Dish).filter_by(submenu_id=submenu_id))
-    dish_list = list(map(Dish.from_orm, dish_list.scalars().all()))
-    dish_dict = {}
-    for n, dish in enumerate(dish_list):
-        dish_dict[n] = dish.dict()
-    await cache.set(key_name, dish_dict)
+    dish_list = await db.execute(
+        _sql.select(table.Dish).filter_by(submenu_id=submenu_id)
+    )
+    dish_list = dish_list.scalars().all()
+    dish_list = list(map(lambda x: Dish.from_orm(x).dict(), dish_list))
+    await cache.set(key_name, dish_list)
 
     return dish_list
 
@@ -36,7 +35,8 @@ async def create_dish(
     db: AsyncSession,
 ):
     try:
-        submenu = await db.execute(_sql.select(table.SubMenu).filter_by(id=submenu_id))
+        req = _sql.select(table.SubMenu).filter_by(id=submenu_id)
+        submenu = await db.execute(req)
         submenu = submenu.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
@@ -64,6 +64,7 @@ async def create_dish(
     update_data = SubMenu.from_orm(submenu).dict()
     await cache.set(f"Menu_{menu_id}_SubMenu_{submenu_id}", update_data)
     await cache.delete(f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}")
+    await cache.delete("All_dish")
 
     return Dish.from_orm(dish)
 
@@ -83,7 +84,8 @@ async def delete_dish(
             detail=f"dish {id} not found",
         )
     try:
-        submenu = await db.execute(_sql.select(table.SubMenu).filter_by(id=submenu_id))
+        req = _sql.select(table.SubMenu).filter_by(id=submenu_id)
+        submenu = await db.execute(req)
         submenu = submenu.scalars().one()
     except Exception:
         raise _fastapi.HTTPException(
@@ -109,6 +111,7 @@ async def delete_dish(
     response.status = True
     response.message = f"The dish {id} has been deleted"
     await cache.delete(f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}")
+    await cache.delete("All_dish")
 
     return Dish_Delete.from_orm(response)
 
@@ -167,8 +170,9 @@ async def update_dish(
     await db.commit()
     key_name = f"Menu_{menu_id}_SubMenu_{submenu_id}_Dish_{id}"
     dish_dict = dish.__dict__
-    del dish_dict['_sa_instance_state']
+    del dish_dict["_sa_instance_state"]
     await cache.set(key_name, dish_dict)
     await cache.delete(f"Dish_list_Menu_{menu_id}_SubMenu_{submenu_id}")
+    await cache.delete("All_dish")
 
     return data

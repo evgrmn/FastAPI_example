@@ -15,14 +15,14 @@ async def get_submenus(
     key_name = f"SubMenu_list_Menu_{menu_id}"
     submenu_list = await cache.get(key_name)
     if submenu_list:
-        submenu_list = list(map(lambda x: x, submenu_list.values()))
         return submenu_list
-    submenu_list = await db.execute(_sql.select(table.SubMenu).filter_by(menu_id=menu_id))
-    submenu_list = list(map(SubMenu.from_orm, submenu_list.scalars().all()))
-    submenu_dict = {}
-    for n, submenu in enumerate(submenu_list):
-        submenu_dict[n] = submenu.dict()
-    await cache.set(key_name, submenu_dict)
+    submenu_list = await db.execute(
+        _sql.select(table.SubMenu).filter_by(menu_id=menu_id)
+    )
+    submenu_list = list(
+        map(lambda x: SubMenu.from_orm(x).dict(), submenu_list.scalars().all())
+    )
+    await cache.set(key_name, submenu_list)
 
     return submenu_list
 
@@ -142,7 +142,7 @@ async def update_submenu(
         setattr(submenu, key, value)
     await db.commit()
     submenu_dict = submenu.__dict__
-    del submenu_dict['_sa_instance_state']
+    del submenu_dict["_sa_instance_state"]
     await cache.set(f"Menu_{menu_id}_SubMenu_{id}", submenu_dict)
     await cache.delete(f"SubMenu_list_Menu_{menu_id}")
 

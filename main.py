@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import fastapi as _fastapi
 
-import config.description as descr
-from endpoints import dish, menu, submenu, task, email, user
+from config.description import description
+from endpoints import dish, menu, submenu, task, email, user, order
 from database.models import create_tables
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
-    description=descr.description,
+    description=description,
 )
 
 
@@ -28,6 +28,7 @@ app.include_router(
     tags=["Emails"],
 )
 app.include_router(user.router, prefix="/api/v1/user", tags=["User"])
+app.include_router(order.router, prefix="/api/v1/order", tags=["Order"])
 app.include_router(menu.router, prefix="/api/v1/menus", tags=["Menus"])
 app.include_router(submenu.router, prefix="/api/v1/menus", tags=["Submenus"])
 app.include_router(dish.router, prefix="/api/v1/menus", tags=["Dishes"])

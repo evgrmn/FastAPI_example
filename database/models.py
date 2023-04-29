@@ -45,14 +45,29 @@ class Dish(Base):
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
     id = _sql.Column(_sql.Integer, primary_key=True, index=True)
     email = _sql.Column(_sql.String, unique=True, index=True)
     hashed_password = _sql.Column(_sql.String)
     date_created = _sql.Column(_sql.DateTime, default=datetime.utcnow)
 
+    children = _orm.relationship(
+        "Order",
+        cascade="all,delete",
+        backref="parent",
+    )
+
     def verify_password(self, password: str):
         return _hash.bcrypt.verify(password, self.hashed_password)
+
+
+class Order(Base):
+    __tablename__ = "order"
+    id = _sql.Column(_sql.Integer, primary_key=True, index=True)
+    user_id = _sql.Column(_sql.Integer, _sql.ForeignKey("user.id"), index=True)
+    dish_id = _sql.Column(_sql.Integer)
+    quantity = _sql.Column(_sql.Integer)
+    date_created = _sql.Column(_sql.DateTime, default=datetime.utcnow)
 
 
 async def drop_tables():

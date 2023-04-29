@@ -6,7 +6,7 @@
 
 Description:
 
-- Four tables: menu, submenu, dish, user
+- Five tables: menu, submenu, dish, user, order
 - The menu has a submenu, the submenu has dishes
 - Each dish can only have one submenu, each submenu can only have one menu
 - The menu is deleted along with all submenus and dishes

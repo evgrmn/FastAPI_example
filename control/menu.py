@@ -8,17 +8,14 @@ import sqlalchemy as _sql
 
 
 async def get_menus(db: AsyncSession):
-    key_name = f"Menu_list"
+    key_name = "Menu_list"
     menu_list = await cache.get(key_name)
     if menu_list:
-        menu_list = list(map(lambda x: x, menu_list.values()))
         return menu_list
     menu_list = await db.execute(_sql.select(table.Menu))
-    menu_list = list(map(Menu.from_orm, menu_list.scalars().all()))
-    menu_dict = {}
-    for n, menu in enumerate(menu_list):
-        menu_dict[n] = menu.dict()
-    await cache.set(key_name, menu_dict)
+    menu_list = menu_list.scalars().all()
+    menu_list = list(map(lambda x: Menu.from_orm(x).dict(), menu_list))
+    await cache.set(key_name, menu_list)
 
     return menu_list
 
@@ -96,7 +93,7 @@ async def update_menu(
         setattr(menu, key, value)
     await db.commit()
     menu_dict = menu.__dict__
-    del menu_dict['_sa_instance_state']
+    del menu_dict["_sa_instance_state"]
     await cache.set(f"Menu_{id}", menu_dict)
     await cache.delete("Menu_list")
 
