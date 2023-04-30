@@ -1,9 +1,10 @@
+from datetime import datetime
+
 from celery.result import AsyncResult
 
-from models.email import Email, Result, Email_list
-from queues.email import send_email_task
 from caching import functions as cache
-from datetime import datetime
+from models.email import Email, Email_list, Result
+from queues.email import send_email_task
 
 
 async def send_email(data: Email):

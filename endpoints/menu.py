@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 import control.menu as _control
-from models.menu import Menu, Menu_Data, Menu_Delete
-from sqlalchemy.ext.asyncio import AsyncSession
+from control.user import get_current_user
 from database.connect import session
-
+from models.menu import Menu, Menu_Data, Menu_Delete
+from models.user import User
 
 router = APIRouter()
 
@@ -35,6 +36,7 @@ async def get_menus(
 async def create_menu(
     data: Menu_Data,
     db: AsyncSession = Depends(session),
+    user: User = Depends(get_current_user),
 ):
     """
     Menu creation. 'title' - menu title, 'description' - menu description.
@@ -43,6 +45,7 @@ async def create_menu(
     return await _control.create_menu(
         data=data,
         db=db,
+        user=user,
     )
 
 
@@ -54,6 +57,7 @@ async def create_menu(
 async def delete_menu(
     menu_id: int,
     db: AsyncSession = Depends(session),
+    user: User = Depends(get_current_user),
 ):
     """
     Removing a menu. 'menu_id' - id in the 'menu' table.
@@ -63,6 +67,7 @@ async def delete_menu(
     return await _control.delete_menu(
         id=menu_id,
         db=db,
+        user=user,
     )
 
 
@@ -94,6 +99,7 @@ async def update_menu(
     data: Menu_Data,
     menu_id: int,
     db: AsyncSession = Depends(session),
+    user: User = Depends(get_current_user),
 ):
     """
     Update a specific menu.
@@ -101,4 +107,4 @@ async def update_menu(
     'title' - menu title, 'description' - menu description.
     """
 
-    return await _control.update_menu(data=data, id=menu_id, db=db)
+    return await _control.update_menu(data=data, id=menu_id, db=db, user=user)

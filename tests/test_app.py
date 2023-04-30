@@ -6,10 +6,19 @@ from typing import Generator
 import httpx
 import pytest
 import pytest_asyncio
+
+from control.user import get_current_user
 from database.models import create_tables, drop_tables
 from main import app
 
 from .vars import Variables as var
+
+
+async def override_dependency():
+    return {"superuser": True}
+
+
+app.dependency_overrides[get_current_user] = override_dependency
 
 pytestmark = pytest.mark.asyncio
 

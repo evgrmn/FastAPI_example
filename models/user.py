@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from pydantic import BaseModel
 from datetime import datetime
+
+from pydantic import BaseModel
 
 
 class Main(BaseModel):
@@ -13,7 +14,8 @@ class User(Main):
     id: int
     email: str
     hashed_password: str
-    date_created: datetime
+    created: datetime
+    superuser: bool
 
 
 class UserCreate(Main):

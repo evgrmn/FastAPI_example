@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 import control.submenu as _control
-from models.submenu import SubMenu, SubMenu_Data, SubMenu_Delete
-from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
+from models.submenu import SubMenu, SubMenu_Data, SubMenu_Delete
 
 router = APIRouter()
 

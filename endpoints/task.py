@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 import control.task as _control
-from models.task import Fill, Result, Task
-from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
+from models.task import Fill, Result, Task
 
 router = APIRouter()
 

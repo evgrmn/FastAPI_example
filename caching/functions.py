@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import json
-import aioredis
-from config.config import Env
 
+import aioredis
+
+from config.config import Env
 
 redis = aioredis.from_url(f"redis://{Env.REDIS_ADDRESS}")
 

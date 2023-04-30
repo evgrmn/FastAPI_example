@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 
 import control.email as _control
-from models.email import Email, Result, Email_list
-
+from models.email import Email, Email_list, Result
 
 router = APIRouter()
 

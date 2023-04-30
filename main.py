@@ -3,8 +3,9 @@ from __future__ import annotations
 import fastapi as _fastapi
 
 from config.description import description
-from endpoints import dish, menu, submenu, task, email, user, order
+from control.user import admin_account
 from database.models import create_tables
+from endpoints import dish, email, menu, order, submenu, task, user
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
@@ -15,6 +16,7 @@ app = _fastapi.FastAPI(
 @app.on_event("startup")
 async def startup_event():
     await create_tables()
+    await admin_account()
 
 
 app.include_router(

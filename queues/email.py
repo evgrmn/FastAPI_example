@@ -1,9 +1,10 @@
-from config.config import Env
-from .connect import celery_app
 import asyncio
 import smtplib
 from email.message import EmailMessage
 
+from config.config import Env
+
+from .connect import celery_app
 
 loop = asyncio.get_event_loop()
 

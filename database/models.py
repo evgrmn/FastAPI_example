@@ -1,8 +1,10 @@
+from datetime import datetime
+
+import passlib.hash as _hash
 import sqlalchemy as _sql
 import sqlalchemy.orm as _orm
+
 from database.connect import Base, engine
-from datetime import datetime
-import passlib.hash as _hash
 
 
 class Menu(Base):
@@ -49,7 +51,8 @@ class User(Base):
     id = _sql.Column(_sql.Integer, primary_key=True, index=True)
     email = _sql.Column(_sql.String, unique=True, index=True)
     hashed_password = _sql.Column(_sql.String)
-    date_created = _sql.Column(_sql.DateTime, default=datetime.utcnow)
+    created = _sql.Column(_sql.DateTime, default=datetime.utcnow)
+    superuser = _sql.Column(_sql.Boolean)
 
     children = _orm.relationship(
         "Order",

@@ -1,13 +1,16 @@
 import fastapi as _fastapi
+import sqlalchemy as _sql
+from sqlalchemy.ext.asyncio import AsyncSession
 
 import database.models as table
 from caching import functions as cache
 from models.menu import Menu, Menu_Data, Menu_Delete
-from sqlalchemy.ext.asyncio import AsyncSession
-import sqlalchemy as _sql
+from models.user import User
 
 
-async def get_menus(db: AsyncSession):
+async def get_menus(
+    db: AsyncSession,
+):
     key_name = "Menu_list"
     menu_list = await cache.get(key_name)
     if menu_list:
@@ -23,7 +26,10 @@ async def get_menus(db: AsyncSession):
 async def create_menu(
     data: Menu_Data,
     db: AsyncSession,
+    user: User,
 ):
+    if not user["superuser"]:
+        raise _fastapi.HTTPException(status_code=400, detail="not properly authorized")
     data = table.Menu(**data.dict())
     db.add(data)
     await db.commit()
@@ -37,7 +43,10 @@ async def create_menu(
 async def delete_menu(
     id: int,
     db: AsyncSession,
+    user: User,
 ):
+    if not user["superuser"]:
+        raise _fastapi.HTTPException(status_code=400, detail="not properly authorized")
     try:
         menu = await db.execute(_sql.select(table.Menu).filter_by(id=id))
         await db.delete(menu.scalars().one())
@@ -79,7 +88,10 @@ async def update_menu(
     data: Menu_Data,
     id: int,
     db: AsyncSession,
+    user: User,
 ):
+    if not user["superuser"]:
+        raise _fastapi.HTTPException(status_code=400, detail="not properly authorized")
     data = data.dict(exclude_unset=True)
     menu = await db.execute(_sql.select(table.Menu).filter_by(id=id))
     try:

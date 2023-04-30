@@ -1,15 +1,20 @@
-import fastapi as _fastapi
+import os
 
+import email_validator as _email_check
+import fastapi as _fastapi
 import fastapi.security as _security
+import jwt as _jwt
+import passlib.hash as _hash
+import sqlalchemy as _sql
+from dotenv import load_dotenv
+from sqlalchemy.ext.asyncio import AsyncSession
+
 import database.models as table
 from caching import functions as cache
-from models.user import User, UserCreate, User_Delete, User_Data
-from sqlalchemy.ext.asyncio import AsyncSession
-from database.connect import session
-import sqlalchemy as _sql
-import email_validator as _email_check
-import passlib.hash as _hash
-import jwt as _jwt
+from database.connect import async_session, session
+from models.user import User, User_Data, User_Delete, UserCreate
+
+load_dotenv()
 
 
 _JWT_SECRET = "donotthinkaboutit"
@@ -25,7 +30,7 @@ async def get_users(db: AsyncSession):
     user_list = user_list.scalars().all()
     user_list = list(map(lambda x: User.from_orm(x).dict(), user_list))
     for user in user_list:
-        user["date_created"] = user["date_created"].strftime("%Y-%m-%dT%H:%M:%S.%f")
+        user["created"] = user["created"].strftime("%Y-%m-%dT%H:%M:%S.%f")
     await cache.set(key_name, user_list)
 
     return user_list
@@ -46,14 +51,12 @@ async def create_user(user: UserCreate, db: AsyncSession):
                 status_code=404, detail="Please enter a valid email"
             )
         hashed_password = _hash.bcrypt.hash(user.password)
-        user = table.User(email=email, hashed_password=hashed_password)
+        user = table.User(email=email, hashed_password=hashed_password, superuser=False)
         db.add(user)
         await db.commit()
         await cache.delete("User_list")
         user_dict = user.__dict__
-        user_dict["date_created"] = user_dict["date_created"].strftime(
-            "%Y-%m-%dT%H:%M:%S.%f"
-        )
+        user_dict["created"] = user_dict["created"].strftime("%Y-%m-%dT%H:%M:%S.%f")
         del user_dict["_sa_instance_state"]
         await cache.set(f"User_{user.id}", user_dict)
 
@@ -82,9 +85,7 @@ async def get_current_user(
             status_code=401, detail="Invalid email or password"
         )
     user_dict = current_user.__dict__
-    user_dict["date_created"] = user_dict["date_created"].strftime(
-        "%Y-%m-%dT%H:%M:%S.%f"
-    )
+    user_dict["created"] = user_dict["created"].strftime("%Y-%m-%dT%H:%M:%S.%f")
     del user_dict["_sa_instance_state"]
     await cache.set(f"User_{current_user.id}", user_dict)
 
@@ -114,7 +115,7 @@ async def authenticate_user(email: str, password: str, db: AsyncSession):
 async def create_token(user: table.User):
     user_schema_obj = User.from_orm(user)
     user_dict = user_schema_obj.dict()
-    del user_dict["date_created"]
+    del user_dict["created"]
     token = _jwt.encode(user_dict, _JWT_SECRET)
 
     return dict(access_token=token, token_type="bearer")
@@ -164,11 +165,26 @@ async def update_user(
         setattr(user, key, value)
     await db.commit()
     user_dict = user.__dict__
-    user_dict["date_created"] = user_dict["date_created"].strftime(
-        "%Y-%m-%dT%H:%M:%S.%f"
-    )
+    user_dict["created"] = user_dict["created"].strftime("%Y-%m-%dT%H:%M:%S.%f")
     del user_dict["_sa_instance_state"]
     await cache.set(f"User_{id}", user_dict)
     await cache.delete("User_list")
 
     return data
+
+
+async def admin_account():
+    async with async_session() as session:
+        async with session.begin():
+            admin = await session.execute(
+                _sql.select(table.User).filter_by(email="admin")
+            )
+            admin = admin.scalars().first()
+            if not admin:
+                password = os.getenv("ADMIN_PASSWORD")
+                hashed_password = _hash.bcrypt.hash(password)
+                admin = table.User(
+                    email="admin", hashed_password=hashed_password, superuser=True
+                )
+                session.add(admin)
+                await session.commit()

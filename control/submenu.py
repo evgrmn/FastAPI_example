@@ -1,11 +1,11 @@
 import fastapi as _fastapi
+import sqlalchemy as _sql
+from sqlalchemy.ext.asyncio import AsyncSession
 
 import database.models as table
 from caching import functions as cache
 from models.menu import Menu
 from models.submenu import SubMenu, SubMenu_Data, SubMenu_Delete
-from sqlalchemy.ext.asyncio import AsyncSession
-import sqlalchemy as _sql
 
 
 async def get_submenus(
@@ -22,7 +22,6 @@ async def get_submenus(
     submenu_list = list(
         map(lambda x: SubMenu.from_orm(x).dict(), submenu_list.scalars().all())
     )
-    await cache.set(key_name, submenu_list)
 
     return submenu_list
 

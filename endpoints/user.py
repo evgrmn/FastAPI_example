@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends
 import fastapi as _fastapi
+import fastapi.security as _security
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 import control.user as _control
-from models.user import User, UserCreate, Token, User_Delete, User_Data
-from sqlalchemy.ext.asyncio import AsyncSession
 from database.connect import session
-import fastapi.security as _security
-
+from models.user import Token, User, User_Data, User_Delete, UserCreate
 
 router = APIRouter()
 

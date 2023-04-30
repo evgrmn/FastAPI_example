@@ -1,12 +1,15 @@
+import asyncio
+
+import sqlalchemy as _sql
 from sqlalchemy import String, func
 from sqlalchemy.sql.expression import bindparam as new_col
-import sqlalchemy as _sql
 from xlsxwriter import Workbook
+
 import database.models as table
 from config.config import Env
-from .connect import celery_app
-import asyncio
 from database.connect import async_session
+
+from .connect import celery_app
 
 loop = asyncio.get_event_loop()
 
