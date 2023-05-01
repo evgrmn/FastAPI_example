@@ -82,7 +82,7 @@ async def get_user(
 
 
 @router.delete(
-    "/{menu_id}",
+    "/{user_id}",
     response_model=User_Delete,
     status_code=200,
     summary="Delete user",

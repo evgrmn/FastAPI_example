@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class Variables:
     id: str
     title: str
@@ -12,3 +15,7 @@ class Variables:
     submenu_count: int = 0
     dish_count: int = 0
     menu_dish_count: int = 0
+    user_id: str = ""
+    email: str = "email"
+    created: datetime = datetime.utcnow()
+    superuser: bool = True

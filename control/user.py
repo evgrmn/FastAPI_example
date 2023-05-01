@@ -160,6 +160,7 @@ async def update_user(
         raise _fastapi.HTTPException(
             status_code=404, detail="Please enter a valid email"
         )
+    data.hashed_password = _hash.bcrypt.hash(data.hashed_password)
     data = data.dict(exclude_unset=True)
     for key, value in data.items():
         setattr(user, key, value)
