@@ -24,6 +24,7 @@ Peculiarities:
 - Celery background tasks
 - Sending emails using gmail.com
 - JSON Web Tokens (JWT)
+- Websocket chat
 
 ## Creating containers and running the application:
 

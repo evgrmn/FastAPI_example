@@ -7,7 +7,6 @@ import httpx
 import pytest
 import pytest_asyncio
 
-from caching.functions import delete_cascade
 from control.user import get_current_user
 from database.models import create_tables, drop_tables
 from main import app

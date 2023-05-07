@@ -45,5 +45,5 @@ ujson==5.7.0
 uvicorn==0.20.0
 uvloop==0.17.0
 watchfiles==0.18.1
-websockets==10.4
+websockets==11.0.2
 XlsxWriter==3.0.8

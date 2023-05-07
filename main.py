@@ -5,7 +5,7 @@ import fastapi as _fastapi
 from config.description import description
 from control.user import admin_account
 from database.models import create_tables
-from endpoints import dish, email, menu, order, submenu, task, user
+from endpoints import chat, dish, email, menu, order, submenu, task, user
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
@@ -34,3 +34,4 @@ app.include_router(order.router, prefix="/api/v1/order", tags=["Order"])
 app.include_router(menu.router, prefix="/api/v1/menus", tags=["Menus"])
 app.include_router(submenu.router, prefix="/api/v1/menus", tags=["Submenus"])
 app.include_router(dish.router, prefix="/api/v1/menus", tags=["Dishes"])
+app.include_router(chat.router, prefix="", tags=["Chat"])
