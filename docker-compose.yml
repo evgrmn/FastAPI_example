@@ -2,7 +2,7 @@ version: '3.8'
 services:
   postgres:
     container_name: postgr
-    image: postgres:15.1-alpine
+    image: postgres:13.9-alpine
     environment:
         POSTGRES_DB: "fastapi_database"
         POSTGRES_PASSWORD: "password"
@@ -57,7 +57,7 @@ services:
     container_name: celery_worker
     build:
       context: .
-    command: celery -A queues.connect worker --loglevel=INFO
+    command: celery -A queues.connect worker -B --loglevel=INFO
     volumes:
       - ./sharefiles:/app/sharefiles
     networks:

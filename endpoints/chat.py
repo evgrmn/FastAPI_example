@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 
 from control.chat import ConnectionManager
 
-TEMPLATES = Jinja2Templates(directory=str("templates"))
+TEMPLATES = Jinja2Templates(directory="templates")
 
 router = APIRouter()
 
@@ -16,13 +16,16 @@ async def chat(
 ):
     """
     Websocket chat is available at http://localhost:8000/chat
+    Each new browser will be registered in the chat under its own number
     """
 
     return TEMPLATES.TemplateResponse(
         "index.html",
         {
-            "request": request, 
-            "variable": "Thus, variables can be passed to index.html, which must be enclosed in {{}}, e.g. {{variable}}"},
+            "request": request,
+            "variable": "Thus, variables can be passed to index.html, \
+                which must be enclosed in {{}}, e.g. {{variable}}",
+        },
     )
 
 

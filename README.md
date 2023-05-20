@@ -14,16 +14,18 @@ Description:
 - In the "menu" table, the number of submenus and dishes is counted
 - In the "submenu" table, the number of dishes is counted
 
-Peculiarities:
+Features:
 
 - Docker containerization
 - Redis caching
 - ORM SQLAlchemy
 - Pydantic data validation
 - Pytest testing
-- Celery background tasks
-- Sending emails using gmail.com
-- JSON Web Tokens (JWT)
+- Celery background tasks:
+    - Getting menu as excel file
+    - Sending emails using gmail.com
+    - Periodic database dump
+- User authorization JSON Web Tokens (JWT)
 - Websocket chat
 
 ## Creating containers and running the application:
