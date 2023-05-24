@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+body {
+  font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #0099ff;
+}
+
+.navbar {  
+  height: 70px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.navbar a {
+  float: left;
+  font-size: 16px;
+  font-weight: bold;
+  color: #1f6492;
+
+}
+
+.line {
+  border: none;
+  width:100%;
+  margin:0px;
+  background-color:#2980B9;
+  height: 1px;
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+  border: none;
+  outline: none;
+  padding: 0px 0px;
+  margin: 0;
+  display: table-cell;
+  vertical-align: middle;
+}
+ 
+.dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 200px;
+}
+
+.drop_list {
+  box-shadow: 6px 6px 0px 0px #CCCCCC;
+  border-right-style: solid;
+  border-right-color: #2980B9;
+  border-right-width: 1px;
+  border-left-style: solid;
+  border-left-color: #2980B9;
+  border-left-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #2980B9;
+  border-bottom-width: 1px;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: #2980B9;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown-content a:hover {
+  background-color: #2980B9;
+  color: white
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
+</head>
+<body>
+<div style="overflow: hidden;">
+    <div style="width: 1000%;">
+        <div class="dropdown" >
+            <div class="navbar">
+                &nbsp;&nbsp;
+                <img src="{{ url_for('static', path='menu_pic_logo.png') }}"/>
+            </div>
+        </div>
+        <div class="dropdown" style="width: 400px;">
+            <div class="navbar" style="
+                font-size: 28px;
+                font-weight: bold;
+                color: #1f6492;
+                ">
+                &nbsp;&nbsp;RESTARAUNT MENU
+            </div>
+        </div>
+        <div class="dropdown" style="width: 80px;">
+            <div class="navbar">
+                <a>ABOUT</a>
+            </div>
+            <div style="position: static;">
+                <div class="dropdown-content">
+                    <div class="drop_list">
+                        <a href="#">LINK 1</a>
+                        <a href="#">LINK 2</a>
+                        <a href="#">LINK 3</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown" style="width: 70px;">
+            <div class="navbar">
+                <a>NEWS</a>
+            </div>
+            <div style="position: static;">
+                <div class="dropdown-content">
+                    <div class="drop_list">
+                        <a href="#">LINK 1</a>
+                        <a href="#">LINK 2</a>
+                        <a href="#">LINK 3</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dropdown" style="width: 100px;">
+            <div class="navbar">
+                <a>CONTACTS</a>
+            </div>
+            <div style="position: static;">
+                <div class="dropdown-content">
+                    <div class="drop_list">
+                        <a href="#">LINK 1</a>
+                        <a href="#">LINK 2</a>
+                        <a href="#">LINK 3</a>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>
+<div><hr class="line"></div>
+</body>
+</html>

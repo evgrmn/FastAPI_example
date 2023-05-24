@@ -1,16 +1,22 @@
 from __future__ import annotations
 
 import fastapi as _fastapi
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from config.description import description
 from control.user import admin_account
 from database.models import create_tables
-from endpoints import chat, dish, email, menu, order, submenu, task, user
+from endpoints import chat, dish, email, html, menu, order, submenu, task, user
+
+TEMPLATES = Jinja2Templates(directory="templates")
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
     description=description,
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.on_event("startup")
@@ -35,3 +41,4 @@ app.include_router(menu.router, prefix="/api/v1/menus", tags=["Menus"])
 app.include_router(submenu.router, prefix="/api/v1/menus", tags=["Submenus"])
 app.include_router(dish.router, prefix="/api/v1/menus", tags=["Dishes"])
 app.include_router(chat.router, prefix="", tags=["Chat"])
+app.include_router(html.router, prefix="", tags=["HTML"])
