@@ -1,22 +1,17 @@
 from __future__ import annotations
 
 import fastapi as _fastapi
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
 from config.description import description
 from control.user import admin_account
 from database.models import create_tables
-from endpoints import chat, dish, email, html, menu, order, submenu, task, user
+from endpoints import chat, dish, email, menu, order, submenu, task, user, html
 
-TEMPLATES = Jinja2Templates(directory="templates")
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
     description=description,
 )
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.on_event("startup")
