@@ -6,6 +6,7 @@ from config.description import description
 from control.user import admin_account
 from database.models import create_tables
 from endpoints import chat, dish, email, menu, order, submenu, task, user, html
+from fastapi.staticfiles import StaticFiles
 
 
 app = _fastapi.FastAPI(
@@ -13,6 +14,7 @@ app = _fastapi.FastAPI(
     description=description,
 )
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.on_event("startup")
 async def startup_event():
