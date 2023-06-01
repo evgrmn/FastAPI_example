@@ -267,6 +267,8 @@ COPY public.dish (id, title, description, submenu_id, price) FROM stdin;
 COPY public.menu (id, title, description, submenus_count, dishes_count) FROM stdin;
 1	BREAKFAST MENU	EVERYDAY FROM 7AM TO 11AM	2	6
 2	DINING MENU	OUR DISHES ARE AVAILABLE AS A STARTER AS WELL AS A MAIN COURSE	2	6
+18	string	string	0	0
+19	string	string	0	0
 \.
 
 
@@ -296,6 +298,7 @@ COPY public.submenu (id, title, description, menu_id, dishes_count) FROM stdin;
 
 COPY public."user" (id, email, hashed_password, created, superuser) FROM stdin;
 1	admin	$2b$12$x2PDyxeeKN9TzSzaalwyAOoUupQO5INTgOEJ3ZWz.oWl9WBmkEi/.	2023-05-20 11:58:55.322236	t
+2	1k@mail.ru	$2b$12$JWz98PuzePOMsBoJ7PLPP.kg4RmLMumrvvWvCGJHo6qZZjoJtro4e	2023-05-31 08:55:51.194392	f
 \.
 
 
@@ -310,7 +313,7 @@ SELECT pg_catalog.setval('public.dish_id_seq', 12, true);
 -- Name: menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.menu_id_seq', 2, true);
+SELECT pg_catalog.setval('public.menu_id_seq', 19, true);
 
 
 --
@@ -331,7 +334,7 @@ SELECT pg_catalog.setval('public.submenu_id_seq', 4, true);
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 1, true);
+SELECT pg_catalog.setval('public.user_id_seq', 2, true);
 
 
 --

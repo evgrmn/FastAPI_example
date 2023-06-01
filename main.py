@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 import fastapi as _fastapi
+from fastapi.staticfiles import StaticFiles
 
 from config.description import description
 from control.user import admin_account
 from database.models import create_tables
-from endpoints import chat, dish, email, menu, order, submenu, task, user, html
-from fastapi.staticfiles import StaticFiles
-
+from endpoints import chat, dish, email, html, menu, order, submenu, task, user
 
 app = _fastapi.FastAPI(
     title="FastAPI Application",
@@ -15,6 +14,7 @@ app = _fastapi.FastAPI(
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 @app.on_event("startup")
 async def startup_event():

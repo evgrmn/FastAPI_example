@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 import email_validator as _email_check
 import fastapi as _fastapi
@@ -7,6 +8,7 @@ import jwt as _jwt
 import passlib.hash as _hash
 import sqlalchemy as _sql
 from dotenv import load_dotenv
+from fastapi import status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import database.models as table
@@ -71,7 +73,15 @@ async def get_current_user(
     db: AsyncSession = _fastapi.Depends(session),
     token: str = _fastapi.Depends(oath2schema),
 ):
-    payload = _jwt.decode(token, _JWT_SECRET, algorithms=["HS256"])
+    credentials_exception = _fastapi.HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials or token has expired",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = _jwt.decode(token, _JWT_SECRET, algorithms=["HS256"])
+    except Exception:
+        raise credentials_exception
     current_user = await cache.get(f"User_{payload['id']}")
     if current_user:
         return current_user
@@ -116,6 +126,9 @@ async def create_token(user: table.User):
     user_schema_obj = User.from_orm(user)
     user_dict = user_schema_obj.dict()
     del user_dict["created"]
+    exp_time = int(f'{os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")}')
+    user_dict["exp"] = datetime.utcnow() + timedelta(minutes=exp_time)
+    await cache.delete(f"User_{user_dict['id']}")
     token = _jwt.encode(user_dict, _JWT_SECRET)
 
     return dict(access_token=token, token_type="bearer")
