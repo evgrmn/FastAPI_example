@@ -5,7 +5,7 @@
 <style>
 
 body {
-  font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #1f6492;
+  font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #0c945b;
 }
 
 .title{
@@ -17,7 +17,7 @@ body {
 }
 
 .navbar {
-  height: 70px;
+  height: 80px;
   display: table-cell;
   vertical-align: middle;
   padding: 0px 10px;
@@ -33,7 +33,7 @@ body {
   border: none;
   width:100%;
   margin:0px;
-  background-color:#2980B9;
+  background-color:#0c945b;
   height: 1px;
 }
 
@@ -56,7 +56,7 @@ body {
 .dropdown-content {
   display: none;
   position: relative;
-  min-width: 200px;
+  min-width: 250px;
 }
 
 .drop_list {
@@ -65,7 +65,7 @@ body {
 
 .dropdown-content a {
   float: none;
-  color: #2980B9;
+  color: #0c945b;
   padding: 12px 16px;
   text-decoration: none;
   display: block;
@@ -73,21 +73,20 @@ body {
 }
 
 .dropdown-content a:hover {
-  background-color: #0097c5;
-  color: white
+  text-decoration: underline;
 }
 
 .dropdown:hover .dropdown-content {
   display: block;
 }
 .dropbtn {
-  color: #1f6492;
+  color: #0c945b;
   font-size: 30px;
   border: none;
   cursor: pointer;
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 950px) {
     .dropdown{
         display: table-cell;
         vertical-align: middle;
@@ -99,15 +98,15 @@ body {
         float:left
     }
     .drop_list {
-        box-shadow: 6px 6px 0px 0px #CCCCCC;
+        box-shadow: 6px 6px 0px 0px #b4d3b1;
         border-right-style: solid;
-        border-right-color: #2980B9;
+        border-right-color: #0c945b;
         border-right-width: 1px;
         border-left-style: solid;
-        border-left-color: #2980B9;
+        border-left-color: #0c945b;
         border-left-width: 1px;
         border-bottom-style: solid;
-        border-bottom-color: #2980B9;
+        border-bottom-color: #0c945b;
         border-bottom-width: 1px;
         background-color: #ffffff;
         z-index: 1;
@@ -117,15 +116,112 @@ body {
     }
   }
 </style>
+</head>
+
+<body>
+<div style="position:absolute">
+    <div class="control">
+        <button id = "btn" onclick="myFunction()" class="dropbtn">&#x2630;</button>
+    </div>
+</div>
+<div style="overflow: hidden;" id="inner-menu">
+    <div style="float: left;">
+        <div class="navbar">
+            <img src="{{ url_for('static', path='menu_pic_logo.png') }}" hspace="20"/>
+        </div>
+    </div>
+    <div id="show" class="title">
+        <div class="navbar">
+            RESTAURANT MENU
+        </div>
+    </div>
+</div>
+<hr class="line">
+</div>
+</body>
+</html>
+
 <script>
+
+    //Menu content
+    let inner_menu = '<div class="dropdown">\
+        <div class="navbar">\
+            <a>ABOUT</a>\
+        </div>\
+        <div style="position: static;">\
+            <div class="dropdown-content">\
+                <div class="drop_list">\
+                    <a href="#">LINK 1</a>\
+                    <a href="#">LINK 2</a>\
+                    <a href="#">LINK 3</a>\
+                </div>\
+            </div>\
+        </div>\
+    </div>\
+    <div class="dropdown">\
+        <div class="navbar">\
+            <a>NEWS</a>\
+        </div>\
+        <div style="position: static;">\
+            <div class="dropdown-content">\
+                <div class="drop_list">\
+                    <a href="#">LINK 1</a>\
+                    <a href="#">LINK 2</a>\
+                    <a href="#">LINK 3</a>\
+                </div>\
+            </div>\
+        </div>\
+    </div>\
+    <div class="dropdown">\
+        <div class="navbar">\
+            <a>CONTACTS</a>\
+        </div>\
+        <div style="position: static;">\
+            <div class="dropdown-content">\
+                <div class="drop_list">\
+                    <a href="#">LINK 1</a>\
+                    <a href="#">LINK 2</a>\
+                    <a href="#">LINK 3</a>\
+                </div>\
+            </div>\
+        </div>\
+    </div>';
+    //Create div tag for top menu
+    var newel = document.getElementById("inner-menu");
+    let div_inner_menu = document.createElement('div');
+    div_inner_menu.id = "inner_menu_content";
+    div_inner_menu.innerHTML = inner_menu;
+    newel.append(div_inner_menu);
+
+    //Create div tag for bottom menu
+    let div_inner_menu_below = document.createElement('div');
+    div_inner_menu_below.id = "inner_menu_below_content";
+    div_inner_menu_below.innerHTML = inner_menu;
+
+    //Resize function
     window.onresize = function(){
-        if (window.innerWidth >= 800) {
+        if (window.innerWidth >= 950) {
             var winnerClassElements = document.getElementsByClassName("dropdown");
             for(var i = 0; i < winnerClassElements.length; i++)
                 {
                     winnerClassElements.item(i).removeAttribute("style")
                 }
-            document.getElementById("btn").innerHTML = "&#x2630";
+            document.getElementById("btn").innerHTML = "&#x2630";            
+            const el = document.getElementById("inner_menu_content");
+
+            //Remove bottom menu and nnsert top menu
+            if (el == null) {
+                const el = document.getElementById("inner_menu_below_content");
+                el.remove()
+                div_inner_menu.innerHTML = inner_menu;
+                newel.append(div_inner_menu);
+            }
+        }
+        else {
+            //Remove top menu and insert bottom menu
+            const el = document.getElementById("inner_menu_content");
+            el.remove()
+            document.body.append(div_inner_menu_below)
         }
     }
     function myFunction() {
@@ -143,70 +239,3 @@ body {
         }
     }
 </script>
-</head>
-<body>
-<div style="position:absolute">
-    <div class="control">
-        <button id = "btn" onclick="myFunction()" class="dropbtn">&#x2630;</button>
-    </div>
-</div>
-<div style="overflow: hidden;">
-    <div style="width: 1000%;">
-        <div style="float: left;">
-            <div class="navbar">
-                <img src="{{ url_for('static', path='menu_pic_logo.png') }}"/>
-            </div>
-        </div>
-        <div id="show" class="title">
-            <div class="navbar">
-                RESTAURANT MENU
-            </div>
-        </div>
-        <div class="dropdown">
-            <div class="navbar">
-                <a>ABOUT</a>
-            </div>
-            <div style="position: static;">
-                <div class="dropdown-content">
-                    <div class="drop_list">
-                        <a href="#">LINK 1</a>
-                        <a href="#">LINK 2</a>
-                        <a href="#">LINK 3</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="dropdown">
-            <div class="navbar">
-                <a>NEWS</a>
-            </div>
-            <div style="position: static;">
-                <div class="dropdown-content">
-                    <div class="drop_list">
-                        <a href="#">LINK 1</a>
-                        <a href="#">LINK 2</a>
-                        <a href="#">LINK 3</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="dropdown">
-            <div class="navbar">
-                <a>CONTACTS</a>
-            </div>
-            <div style="position: static;">
-                <div class="dropdown-content">
-                    <div class="drop_list">
-                        <a href="#">LINK 1</a>
-                        <a href="#">LINK 2</a>
-                        <a href="#">LINK 3</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<hr class="line">
-</div>
-</body>
-</html>
