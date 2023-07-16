@@ -202,11 +202,6 @@ body {
 
     function func() {
         if (window.innerWidth >= 950) {
-            var innerClassElements = document.getElementsByClassName("dropdown");
-            for(var i = 0; i < innerClassElements.length; i++)
-                {
-                    innerClassElements.item(i).removeAttribute("style")
-                }
             document.getElementById("btn").innerHTML = "&#x2630";            
             const el = document.getElementById("inner_menu_content");
 
@@ -226,7 +221,7 @@ body {
             document.body.append(div_inner_menu_below)
         }
     }
-
+    
     window.addEventListener('resize', func);
     window.addEventListener('load', func);
 
