@@ -5,19 +5,19 @@
 <style>
 
 body {
-  font-family: Arial, Helvetica, sans-serif; font-size: 16px; color: #0c945b;
+  font-family: Arial, Helvetica, sans-serif; font-size: 20px; color: #333333;
 }
 
 .title{
     width: 400px;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
     display: table-cell;
     vertical-align: middle;
 }
 
 .navbar {
-  height: 80px;
+  height: 90px;
   display: table-cell;
   vertical-align: middle;
   padding: 0px 10px;
@@ -25,7 +25,7 @@ body {
 
 .navbar a {
   float: left;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -33,7 +33,7 @@ body {
   border: none;
   width:100%;
   margin:0px;
-  background-color:#00c95a;
+  background-color:#333333;
   height: 1px;
 }
 
@@ -65,8 +65,8 @@ body {
 
 .dropdown-content a {
   float: none;
-  color: #0c945b;
-  padding: 12px 16px;
+  color: #333333;
+  padding: 12px 12px;
   text-decoration: none;
   display: block;
   text-align: left;
@@ -80,7 +80,7 @@ body {
   display: block;
 }
 .dropbtn {
-  color: #0c945b;
+  color: #333333;
   font-size: 30px;
   border: none;
   cursor: pointer;
@@ -98,15 +98,15 @@ body {
         float:left
     }
     .drop_list {
-        box-shadow: 6px 6px 0px 0px #b4d3b1;
+        box-shadow: 6px 6px 0px 0px #cccccc;
         border-right-style: solid;
-        border-right-color: #00c95a;
+        border-right-color: #333333;
         border-right-width: 1px;
         border-left-style: solid;
-        border-left-color: #00c95a;
+        border-left-color: #333333;
         border-left-width: 1px;
         border-bottom-style: solid;
-        border-bottom-color: #00c95a;
+        border-bottom-color: #333333;
         border-bottom-width: 1px;
         background-color: #ffffff;
         z-index: 1;
@@ -118,7 +118,7 @@ body {
 </style>
 </head>
 
-<body>
+<body style="margin:0; padding:0">
 <div style="position:absolute">
     <div class="control">
         <button id = "btn" onclick="myFunction()" class="dropbtn">&#x2630;</button>
@@ -127,12 +127,12 @@ body {
 <div style="overflow: hidden;" id="inner-menu">
     <div style="float: left;">
         <div class="navbar">
-            <img src="{{ url_for('static', path='menu_pic_logo.png') }}" hspace="20"/>
+            <img src="{{ url_for('static', path='r_pic.png') }}" style="padding-left: 30px;"/>
         </div>
     </div>
     <div id="show" class="title">
         <div class="navbar">
-            RESTAURANT MENU
+            Restaurant Menu
         </div>
     </div>
 </div>
@@ -146,42 +146,42 @@ body {
     //Menu content
     let inner_menu = '<div class="dropdown">\
         <div class="navbar">\
-            <a>ABOUT</a>\
+            <a>About</a>\
         </div>\
         <div style="position: static;">\
             <div class="dropdown-content">\
                 <div class="drop_list">\
-                    <a href="#">LINK 1</a>\
-                    <a href="#">LINK 2</a>\
-                    <a href="#">LINK 3</a>\
+                    <a href="#">link 1</a>\
+                    <a href="#">link 2</a>\
+                    <a href="#">link 3</a>\
                 </div>\
             </div>\
         </div>\
     </div>\
     <div class="dropdown">\
         <div class="navbar">\
-            <a>NEWS</a>\
+            <a>News</a>\
         </div>\
         <div style="position: static;">\
             <div class="dropdown-content">\
                 <div class="drop_list">\
-                    <a href="#">LINK 1</a>\
-                    <a href="#">LINK 2</a>\
-                    <a href="#">LINK 3</a>\
+                    <a href="#">link 1</a>\
+                    <a href="#">link 2</a>\
+                    <a href="#">link 3</a>\
                 </div>\
             </div>\
         </div>\
     </div>\
     <div class="dropdown">\
         <div class="navbar">\
-            <a>CONTACTS</a>\
+            <a>Contacts</a>\
         </div>\
         <div style="position: static;">\
             <div class="dropdown-content">\
                 <div class="drop_list">\
-                    <a href="#">LINK 1</a>\
-                    <a href="#">LINK 2</a>\
-                    <a href="#">LINK 3</a>\
+                    <a href="#">link 1</a>\
+                    <a href="#">link 2</a>\
+                    <a href="#">link 3</a>\
                 </div>\
             </div>\
         </div>\
@@ -196,21 +196,18 @@ body {
     //Create div tag for bottom menu
     let div_inner_menu_below = document.createElement('div');
     div_inner_menu_below.id = "inner_menu_below_content";
+    div_inner_menu_below.style = "padding-left: 35px;";
     div_inner_menu_below.innerHTML = inner_menu;
 
-    //Resize function
-    window.onresize = function(){
+
+    function func() {
         if (window.innerWidth >= 950) {
-            var winnerClassElements = document.getElementsByClassName("dropdown");
-            for(var i = 0; i < winnerClassElements.length; i++)
-                {
-                    winnerClassElements.item(i).removeAttribute("style")
-                }
             document.getElementById("btn").innerHTML = "&#x2630";            
             const el = document.getElementById("inner_menu_content");
 
             //Remove bottom menu and nnsert top menu
             if (el == null) {
+                
                 const el = document.getElementById("inner_menu_below_content");
                 el.remove()
                 div_inner_menu.innerHTML = inner_menu;
@@ -224,6 +221,11 @@ body {
             document.body.append(div_inner_menu_below)
         }
     }
+    
+    window.addEventListener('resize', func);
+    window.addEventListener('load', func);
+
+
     function myFunction() {
         var winnerClassElements = document.getElementsByClassName("dropdown");
         for(var i = 0; i < winnerClassElements.length; i++)
